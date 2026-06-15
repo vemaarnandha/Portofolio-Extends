@@ -1,8 +1,5 @@
 import { Hono } from "hono";
-import { eq } from "drizzle-orm";
-import { createClient } from "@libsql/client/web";
-import { drizzle } from "drizzle-orm/libsql";
-import { portfolio } from "../db/schema";
+import { getSupabase, toCamelCase } from "../lib/supabase";
 import { verifyToken } from "../lib/jwt";
 import type { Env } from "../types/env";
 
@@ -13,16 +10,6 @@ interface JWTPayload {
 
 const portfolioRoutes = new Hono<{ Bindings: Env }>();
 
-// Helper: get DB instance
-function getDb(env: Env) {
-  const client = createClient({
-    url: env.TURSO_DATABASE_URL,
-    authToken: env.TURSO_AUTH_TOKEN,
-  });
-  return drizzle(client);
-}
-
-// Helper: verify JWT middleware
 async function authMiddleware(c: any, next: any) {
   const authHeader = c.req.header("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -40,19 +27,22 @@ async function authMiddleware(c: any, next: any) {
   await next();
 }
 
-// GET /api/portfolio - Public
 portfolioRoutes.get("/", async (c) => {
   try {
-    const db = getDb(c.env);
-    const items = await db.select().from(portfolio).orderBy(portfolio.createdAt);
-    return c.json({ success: true, data: items, message: "Data portfolio berhasil diambil" });
+    const supabase = getSupabase(c.env);
+    const { data, error } = await supabase
+      .from("portfolio")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+    return c.json({ success: true, data: toCamelCase(data ?? []), message: "Data portfolio berhasil diambil" });
   } catch (error) {
     console.error("Get portfolio error:", error);
     return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
   }
 });
 
-// GET /api/portfolio/:id - Public
 portfolioRoutes.get("/:id", async (c) => {
   try {
     const id = Number(c.req.param("id"));
@@ -60,21 +50,26 @@ portfolioRoutes.get("/:id", async (c) => {
       return c.json({ success: false, data: null, message: "ID tidak valid" }, 400);
     }
 
-    const db = getDb(c.env);
-    const items = await db.select().from(portfolio).where(eq(portfolio.id, id)).limit(1);
+    const supabase = getSupabase(c.env);
+    const { data, error } = await supabase
+      .from("portfolio")
+      .select("*")
+      .eq("id", id)
+      .limit(1);
 
-    if (items.length === 0) {
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
       return c.json({ success: false, data: null, message: "Portfolio tidak ditemukan" }, 404);
     }
 
-    return c.json({ success: true, data: items[0], message: "Data portfolio berhasil diambil" });
+    return c.json({ success: true, data: toCamelCase(data)[0], message: "Data portfolio berhasil diambil" });
   } catch (error) {
     console.error("Get portfolio by id error:", error);
     return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
   }
 });
 
-// POST /api/portfolio - Protected
 portfolioRoutes.post("/", authMiddleware, async (c) => {
   try {
     const body = await c.req.json<{
@@ -88,22 +83,27 @@ portfolioRoutes.post("/", authMiddleware, async (c) => {
       return c.json({ success: false, data: null, message: "Semua field wajib diisi" }, 400);
     }
 
-    const db = getDb(c.env);
-    const result = await db.insert(portfolio).values({
-      namaProject: body.nama_project,
-      photoUrl: body.photo_url,
-      jobdesk: body.jobdesk,
-      deskripsi: body.deskripsi,
-    }).returning();
+    const supabase = getSupabase(c.env);
+    const { data, error } = await supabase
+      .from("portfolio")
+      .insert({
+        nama_project: body.nama_project,
+        photo_url: body.photo_url,
+        jobdesk: body.jobdesk,
+        deskripsi: body.deskripsi,
+      })
+      .select()
+      .single();
 
-    return c.json({ success: true, data: result[0], message: "Portfolio berhasil ditambahkan" }, 201);
+    if (error) throw error;
+
+    return c.json({ success: true, data: toCamelCase([data])[0], message: "Portfolio berhasil ditambahkan" }, 201);
   } catch (error) {
     console.error("Create portfolio error:", error);
     return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
   }
 });
 
-// PUT /api/portfolio/:id - Protected
 portfolioRoutes.put("/:id", authMiddleware, async (c) => {
   try {
     const id = Number(c.req.param("id"));
@@ -122,30 +122,33 @@ portfolioRoutes.put("/:id", authMiddleware, async (c) => {
       return c.json({ success: false, data: null, message: "Semua field wajib diisi" }, 400);
     }
 
-    const db = getDb(c.env);
-    const result = await db
-      .update(portfolio)
-      .set({
-        namaProject: body.nama_project,
-        photoUrl: body.photo_url,
+    const supabase = getSupabase(c.env);
+    const { data, error } = await supabase
+      .from("portfolio")
+      .update({
+        nama_project: body.nama_project,
+        photo_url: body.photo_url,
         jobdesk: body.jobdesk,
         deskripsi: body.deskripsi,
       })
-      .where(eq(portfolio.id, id))
-      .returning();
+      .eq("id", id)
+      .select()
+      .single();
 
-    if (result.length === 0) {
-      return c.json({ success: false, data: null, message: "Portfolio tidak ditemukan" }, 404);
+    if (error) {
+      if (error.code === "PGRST116") {
+        return c.json({ success: false, data: null, message: "Portfolio tidak ditemukan" }, 404);
+      }
+      throw error;
     }
 
-    return c.json({ success: true, data: result[0], message: "Portfolio berhasil diperbarui" });
+    return c.json({ success: true, data: toCamelCase([data])[0], message: "Portfolio berhasil diperbarui" });
   } catch (error) {
     console.error("Update portfolio error:", error);
     return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
   }
 });
 
-// DELETE /api/portfolio/:id - Protected
 portfolioRoutes.delete("/:id", authMiddleware, async (c) => {
   try {
     const id = Number(c.req.param("id"));
@@ -153,14 +156,22 @@ portfolioRoutes.delete("/:id", authMiddleware, async (c) => {
       return c.json({ success: false, data: null, message: "ID tidak valid" }, 400);
     }
 
-    const db = getDb(c.env);
-    const result = await db.delete(portfolio).where(eq(portfolio.id, id)).returning();
+    const supabase = getSupabase(c.env);
+    const { data, error } = await supabase
+      .from("portfolio")
+      .delete()
+      .eq("id", id)
+      .select()
+      .single();
 
-    if (result.length === 0) {
-      return c.json({ success: false, data: null, message: "Portfolio tidak ditemukan" }, 404);
+    if (error) {
+      if (error.code === "PGRST116") {
+        return c.json({ success: false, data: null, message: "Portfolio tidak ditemukan" }, 404);
+      }
+      throw error;
     }
 
-    return c.json({ success: true, data: result[0], message: "Portfolio berhasil dihapus" });
+    return c.json({ success: true, data: toCamelCase([data])[0], message: "Portfolio berhasil dihapus" });
   } catch (error) {
     console.error("Delete portfolio error:", error);
     return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);

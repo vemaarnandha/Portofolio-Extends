@@ -8,7 +8,7 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 |-------|-----------|
 | Frontend | React 19 + TypeScript + Vite + Tailwind CSS + shadcn/ui |
 | Backend | Hono + Cloudflare Workers |
-| Database | Turso (libSQL serverless) + Drizzle ORM |
+| Database | Supabase (PostgreSQL) via @supabase/supabase-js |
 | Auth | JWT manual (jose) + PBKDF2 password hashing |
 
 ## Struktur Folder
@@ -82,34 +82,26 @@ cp .env.example .env.local
 npm run dev     # http://localhost:5173
 ```
 
-### 2. Setup Turso Database
+### 2. Setup Supabase Database
+
+1. **Buat project** di https://supabase.com
+2. **SQL Editor** → buka `backend/supabase-setup.sql`, jalankan semua query untuk membuat tabel `portfolio` dan `admin_users`
+3. **Project Settings → API** — catet `Project URL` (SUPABASE_URL) dan `anon public` key (SUPABASE_ANON_KEY)
+
+### 3. Generate Password Hash (untuk seed admin)
 
 ```bash
-# Install Turso CLI: https://docs.turso.tech/reference/turso-cli
+cd backend
 
-# Login dan buat database
-turso auth login
-turso db create portfolio-db
+# Generate hash untuk password (default: admin123)
+npm run gen-hash
+# Atau: npx tsx scripts/gen-hash.ts admin123
 
-# Dapatkan connection URL
-turso db show portfolio-db --url
-# Output: libsql://portfolio-db-[user].turso.io
-
-# Buat auth token
-turso db tokens create portfolio-db
+# Copy output hash, lalu jalankan di Supabase SQL Editor:
+# INSERT INTO admin_users (email, password_hash) VALUES ('admin@portfolio.com', 'hash-disini');
 ```
 
-### 3. Jalankan Migration
-
-```bash
-# Connect ke Turso dan jalankan SQL
-turso db shell portfolio-db < backend/migrations/0001_init.sql
-
-# Seed data admin dan portfolio sample
-turso db shell portfolio-db < backend/seed/seed.sql
-```
-
-> **Catatan**: Seed SQL memerlukan hash password yang valid. Untuk generate hash, jalankan fungsi `hashPassword()` dari `backend/src/lib/password.ts` di Node.js, lalu update seed file dengan hash yang benar.
+> Hash di-generate dengan PBKDF2 (16-byte salt, 100,000 iterasi SHA-256) — compatible dengan Cloudflare Workers.
 
 ### 4. Setup Backend
 
@@ -117,39 +109,16 @@ turso db shell portfolio-db < backend/seed/seed.sql
 cd backend
 npm install
 
-# Copy dan edit wrangler.toml
-cp .env.example .env
-touch .dev.vars    # Untuk local dev secrets
-
-# Isi secrets
-npx wrangler secret put JWT_SECRET
-npx wrangler secret put TURSO_AUTH_TOKEN
-npx wrangler secret put TURSO_DATABASE_URL
-
-# Atau untuk development local, buat file .dev.vars:
-echo "JWT_SECRET=your-secret-key-min-32-characters" > .dev.vars
-echo "TURSO_AUTH_TOKEN=your-turso-token" >> .dev.vars
-echo "TURSO_DATABASE_URL=libsql://your-db.turso.io" >> .dev.vars
+# Copy .dev.vars untuk local development
+# Isi dengan SUPABASE_URL, SUPABASE_ANON_KEY, JWT_SECRET dari Supabase dashboard
+cp .env.example .dev.vars
+# Edit .dev.vars dengan credentials Supabase Anda
 
 # Run development
 npm run dev      # http://localhost:8787
 ```
 
-### 5. Generate Password Hash (untuk seed)
 
-```typescript
-// save-as: scripts/gen-hash.ts
-import { hashPassword } from "../backend/src/lib/password";
-
-async function main() {
-  const hash = await hashPassword("admin123");
-  console.log(hash);
-}
-
-main();
-```
-
-Jalankan dengan `npx tsx scripts/gen-hash.ts`, lalu copy hash output ke seed.sql.
 
 ## Deployment
 
@@ -175,8 +144,8 @@ cd backend
 
 # Set secrets (one-time)
 npx wrangler secret put JWT_SECRET
-npx wrangler secret put TURSO_AUTH_TOKEN
-npx wrangler secret put TURSO_DATABASE_URL
+npx wrangler secret put SUPABASE_URL
+npx wrangler secret put SUPABASE_ANON_KEY
 
 # Update CORS origin di wrangler.toml
 # [vars]

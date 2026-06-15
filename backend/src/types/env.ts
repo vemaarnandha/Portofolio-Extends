@@ -1,6 +1,6 @@
 export interface Env {
-  TURSO_DATABASE_URL: string;
-  TURSO_AUTH_TOKEN: string;
+  SUPABASE_URL: string;
+  SUPABASE_ANON_KEY: string;
   JWT_SECRET: string;
   CORS_ORIGIN: string;
 }

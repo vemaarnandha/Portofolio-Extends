@@ -1,15 +1,12 @@
 import { Hono } from "hono";
-import { eq } from "drizzle-orm";
-import { createClient } from "@libsql/client/web";
-import { drizzle } from "drizzle-orm/libsql";
-import { adminUsers } from "../db/schema";
-import { hashPassword, verifyPassword } from "../lib/password";
+import { getSupabase } from "../lib/supabase";
+import { verifyPassword } from "../lib/password";
 import { createToken } from "../lib/jwt";
 import type { Env } from "../types/env";
+import type { AdminUser } from "../db/schema";
 
 const auth = new Hono<{ Bindings: Env }>();
 
-// POST /api/auth/login
 auth.post("/login", async (c) => {
   try {
     const { email, password } = await c.req.json<{ email: string; password: string }>();
@@ -18,20 +15,21 @@ auth.post("/login", async (c) => {
       return c.json({ success: false, data: null, message: "Email dan password wajib diisi" }, 400);
     }
 
-    const client = createClient({
-      url: c.env.TURSO_DATABASE_URL,
-      authToken: c.env.TURSO_AUTH_TOKEN,
-    });
-    const db = drizzle(client);
+    const supabase = getSupabase(c.env);
+    const { data: users, error } = await supabase
+      .from("admin_users")
+      .select("*")
+      .eq("email", email)
+      .limit(1);
 
-    const users = await db.select().from(adminUsers).where(eq(adminUsers.email, email)).limit(1);
-    const user = users[0];
+    if (error) throw error;
+    const user = users?.[0] as AdminUser | undefined;
 
     if (!user) {
       return c.json({ success: false, data: null, message: "Email atau password salah" }, 401);
     }
 
-    const isValid = await verifyPassword(password, user.passwordHash);
+    const isValid = await verifyPassword(password, user.password_hash);
     if (!isValid) {
       return c.json({ success: false, data: null, message: "Email atau password salah" }, 401);
     }
