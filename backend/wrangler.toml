@@ -1,0 +1,20 @@
+name = "portfolio-backend"
+main = "src/index.ts"
+compatibility_date = "2024-10-22"
+
+# Environment Variables
+[vars]
+# Set your frontend Vercel domain here for CORS
+CORS_ORIGIN = "https://your-vercel-domain.vercel.app"
+# For local development, use: CORS_ORIGIN = "http://localhost:5173"
+
+# Secrets (use `wrangler secret put` to set these)
+# wrangler secret put JWT_SECRET
+# wrangler secret put TURSO_AUTH_TOKEN
+# wrangler secret put TURSO_DATABASE_URL
+
+# D1 Database (alternative to Turso - keep for reference)
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "portfolio-db"
+# database_id = "your-database-id"
