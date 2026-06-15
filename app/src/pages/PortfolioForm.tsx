@@ -20,14 +20,12 @@ export default function PortfolioForm() {
   const [fetchLoading, setFetchLoading] = useState(isEdit);
   const [error, setError] = useState("");
 
-  // Check auth
   useEffect(() => {
     if (!isAuthenticated()) {
       navigate("/admin/login");
     }
   }, [navigate]);
 
-  // Fetch data if edit mode
   useEffect(() => {
     if (!isEdit) return;
     let mounted = true;
@@ -92,43 +90,43 @@ export default function PortfolioForm() {
   if (fetchLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-arcane-500" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen py-8 animate-fade-from-abyss">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         <Link
           to="/admin/dashboard"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-sm text-arcane-400 hover:text-arcane-300 transition-colors mb-6 font-heading tracking-wider"
         >
           <ArrowLeft className="h-4 w-4" />
           Kembali ke Dashboard
         </Link>
 
-        <h1 className="text-2xl font-bold mb-2">
+        <h1 className="font-heading text-2xl font-bold tracking-[0.05em] text-arcane-500 mb-2">
           {isEdit ? "Edit Portfolio" : "Tambah Portfolio"}
         </h1>
-        <p className="text-sm text-muted-foreground mb-8">
+        <p className="text-sm text-arcane-300/60 font-body mb-8">
           {isEdit
             ? "Perbarui informasi portfolio yang sudah ada."
             : "Isi form di bawah untuk menambahkan portfolio baru."}
         </p>
 
-        <div className="rounded-xl border bg-card p-6">
+        <div className="rounded-xl border border-arcane-900/50 bg-void-900 p-6 shadow-md">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">
+              <div className="flex items-center gap-2 rounded-lg border border-blood-500/20 bg-blood-500/10 p-3 text-sm text-blood-500">
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
                 {error}
               </div>
             )}
 
             <div className="space-y-2">
-              <label htmlFor="nama_project" className="text-sm font-medium">
-                Nama Project <span className="text-destructive">*</span>
+              <label htmlFor="nama_project" className="text-sm font-heading tracking-wider text-arcane-300">
+                Nama Project <span className="text-blood-500">*</span>
               </label>
               <input
                 id="nama_project"
@@ -136,14 +134,14 @@ export default function PortfolioForm() {
                 type="text"
                 value={form.nama_project}
                 onChange={handleChange}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                className="w-full rounded-md border border-arcane-900 bg-void-950 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
                 placeholder="Website E-Commerce"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="photo_url" className="text-sm font-medium">
-                URL Foto <span className="text-destructive">*</span>
+              <label htmlFor="photo_url" className="text-sm font-heading tracking-wider text-arcane-300">
+                URL Foto <span className="text-blood-500">*</span>
               </label>
               <input
                 id="photo_url"
@@ -151,11 +149,11 @@ export default function PortfolioForm() {
                 type="url"
                 value={form.photo_url}
                 onChange={handleChange}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                className="w-full rounded-md border border-arcane-900 bg-void-950 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
                 placeholder="https://example.com/image.jpg"
               />
               {form.photo_url && (
-                <div className="mt-2 rounded-lg border overflow-hidden bg-muted">
+                <div className="mt-2 rounded-lg border border-arcane-900/50 overflow-hidden bg-muted">
                   <img
                     src={form.photo_url}
                     alt="Preview"
@@ -169,8 +167,8 @@ export default function PortfolioForm() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="jobdesk" className="text-sm font-medium">
-                Jobdesk / Role <span className="text-destructive">*</span>
+              <label htmlFor="jobdesk" className="text-sm font-heading tracking-wider text-arcane-300">
+                Jobdesk / Role <span className="text-blood-500">*</span>
               </label>
               <input
                 id="jobdesk"
@@ -178,14 +176,14 @@ export default function PortfolioForm() {
                 type="text"
                 value={form.jobdesk}
                 onChange={handleChange}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                className="w-full rounded-md border border-arcane-900 bg-void-950 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
                 placeholder="Fullstack Developer"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="deskripsi" className="text-sm font-medium">
-                Deskripsi <span className="text-destructive">*</span>
+              <label htmlFor="deskripsi" className="text-sm font-heading tracking-wider text-arcane-300">
+                Deskripsi <span className="text-blood-500">*</span>
               </label>
               <textarea
                 id="deskripsi"
@@ -193,7 +191,7 @@ export default function PortfolioForm() {
                 rows={5}
                 value={form.deskripsi}
                 onChange={handleChange}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 resize-none"
+                className="w-full rounded-md border border-arcane-900 bg-void-950 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200 resize-none"
                 placeholder="Jelaskan project ini secara detail..."
               />
             </div>
@@ -202,7 +200,7 @@ export default function PortfolioForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 rounded-lg bg-arcane-500 px-6 py-2.5 text-sm font-heading tracking-wider font-semibold text-void-950 hover:bg-arcane-400 hover:shadow-glow active:scale-[0.97] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>
@@ -218,7 +216,7 @@ export default function PortfolioForm() {
               </button>
               <Link
                 to="/admin/dashboard"
-                className="inline-flex items-center rounded-lg border px-6 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg border border-arcane-900/50 px-6 py-2.5 text-sm font-heading tracking-wider text-arcane-300 hover:bg-arcane-900/50 hover:border-arcane-700 transition-all duration-200"
               >
                 Batal
               </Link>

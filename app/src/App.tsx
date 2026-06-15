@@ -13,7 +13,6 @@ function Layout() {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith("/admin");
 
-  // Admin pages have their own layout
   if (isAdminPage) {
     return (
       <Routes>
@@ -25,11 +24,10 @@ function Layout() {
     );
   }
 
-  // Public pages with navbar and footer
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 animate-fade-from-abyss">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/projects" element={<Projects />} />

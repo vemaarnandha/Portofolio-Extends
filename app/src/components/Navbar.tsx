@@ -14,64 +14,49 @@ export default function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 border-b border-arcane-900/50 bg-void-950/95 backdrop-blur supports-[backdrop-filter]:bg-void-950/60">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 text-xl font-bold text-primary">
-          <Code2 className="h-6 w-6" />
+        <Link to="/" className="flex items-center gap-2 text-xl font-heading font-bold text-arcane-500">
+          <Code2 className="h-6 w-6 text-arcane-500" />
           <span>MyPortfolio</span>
         </Link>
-
-        {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link
-              key={link.path}
-              to={link.path}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname === link.path ? "text-primary" : "text-muted-foreground"
+              key={link.path} to={link.path}
+              className={`text-sm font-medium font-heading tracking-wider transition-colors duration-200 hover:text-arcane-400 ${
+                location.pathname === link.path ? "text-arcane-500" : "text-arcane-300/70"
               }`}
-            >
-              {link.label}
-            </Link>
+            >{link.label}</Link>
           ))}
           <Link
             to="/admin/login"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+            className="rounded-md bg-arcane-500 px-4 py-2 text-sm font-medium text-void-950 hover:bg-arcane-400 hover:shadow-glow transition-all duration-200 active:scale-[0.97]"
           >
             Admin
           </Link>
         </div>
-
-        {/* Mobile Toggle */}
         <button
-          className="md:hidden p-2 rounded-md hover:bg-accent"
+          className="md:hidden p-2 rounded-md text-arcane-300 hover:bg-arcane-900/50 hover:text-arcane-400 transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
-
-      {/* Mobile Nav */}
       {mobileOpen && (
-        <div className="md:hidden border-t bg-background px-4 py-4 space-y-3">
+        <div className="md:hidden border-t border-arcane-900/50 bg-void-950 px-4 py-4 space-y-3">
           {navLinks.map((link) => (
             <Link
-              key={link.path}
-              to={link.path}
-              onClick={() => setMobileOpen(false)}
-              className={`block text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname === link.path ? "text-primary" : "text-muted-foreground"
+              key={link.path} to={link.path} onClick={() => setMobileOpen(false)}
+              className={`block text-sm font-heading tracking-wider transition-colors duration-200 hover:text-arcane-400 ${
+                location.pathname === link.path ? "text-arcane-500" : "text-arcane-300/70"
               }`}
-            >
-              {link.label}
-            </Link>
+            >{link.label}</Link>
           ))}
           <Link
-            to="/admin/login"
-            onClick={() => setMobileOpen(false)}
-            className="block rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors text-center"
+            to="/admin/login" onClick={() => setMobileOpen(false)}
+            className="block rounded-md bg-arcane-500 px-4 py-2 text-sm font-medium text-void-950 hover:bg-arcane-400 transition-colors text-center"
           >
             Admin
           </Link>
