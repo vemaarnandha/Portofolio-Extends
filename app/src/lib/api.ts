@@ -1,4 +1,4 @@
-import type { ApiResponse, Portfolio, LoginResponse } from "@/types";
+import type { ApiResponse, Portfolio, LoginResponse, UploadResponse } from "@/types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8787";
 
@@ -82,4 +82,36 @@ export async function deletePortfolio(id: number): Promise<ApiResponse<Portfolio
     headers: getHeaders(),
   });
   return handleResponse<Portfolio>(response);
+}
+
+// IMAGE UPLOAD API
+export async function uploadProjectImage(
+  projectId: number,
+  file: File
+): Promise<UploadResponse> {
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("projectId", String(projectId));
+
+  const response = await fetch(`${API_BASE_URL}/api/portfolio/upload-image`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: formData,
+  });
+
+  return response.json();
+}
+
+export async function deleteProjectImage(projectId: number): Promise<UploadResponse> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/portfolio/${projectId}/image`,
+    {
+      method: "DELETE",
+      headers: getHeaders(),
+    }
+  );
+
+  return response.json();
 }

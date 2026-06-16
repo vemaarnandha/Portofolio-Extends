@@ -10,3 +10,4 @@ CORS_ORIGIN = "https://your-vercel-domain.vercel.app"
 # wrangler secret put JWT_SECRET
 # wrangler secret put SUPABASE_URL
 # wrangler secret put SUPABASE_ANON_KEY
+# wrangler secret put SUPABASE_SERVICE_ROLE

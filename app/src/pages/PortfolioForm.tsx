@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createPortfolio, updatePortfolio, getPortfolioById } from "@/lib/api";
+import { createPortfolio, updatePortfolio, getPortfolioById, uploadProjectImage } from "@/lib/api";
 import { isAuthenticated } from "@/lib/auth";
 import { Loader2, AlertCircle, ArrowLeft, Save } from "lucide-react";
 import { Link } from "react-router-dom";
+import ImageUploadField from "@/components/ui/image-upload";
 
 export default function PortfolioForm() {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ export default function PortfolioForm() {
     jobdesk: "",
     deskripsi: "",
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(isEdit);
   const [error, setError] = useState("");
@@ -41,6 +44,9 @@ export default function PortfolioForm() {
             jobdesk: data.jobdesk,
             deskripsi: data.deskripsi,
           });
+          if (data.photoUrl) {
+            setImagePreview(data.photoUrl);
+          }
         } else if (mounted) {
           setError(response.message || "Data tidak ditemukan");
         }
@@ -60,20 +66,53 @@ export default function PortfolioForm() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
+  function handleImageChange(file: File | null, previewUrl?: string) {
+    setImageFile(file);
+    if (previewUrl) setImagePreview(previewUrl);
+    if (!file) {
+      setImagePreview(null);
+      setForm((prev) => ({ ...prev, photo_url: "" }));
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
-    if (!form.nama_project || !form.photo_url || !form.jobdesk || !form.deskripsi) {
+    if (!form.nama_project || !form.jobdesk || !form.deskripsi) {
       setError("Semua field wajib diisi.");
+      return;
+    }
+
+    if (!imageFile && !form.photo_url) {
+      setError("Gambar project wajib diupload.");
       return;
     }
 
     setLoading(true);
     try {
+      let photoUrl = form.photo_url;
+
+      if (imageFile) {
+        const uploadRes = await uploadProjectImage(0, imageFile);
+        if (!uploadRes.success) {
+          setError(uploadRes.error || "Gagal upload gambar");
+          setLoading(false);
+          return;
+        }
+        photoUrl = uploadRes.url!;
+      }
+
+      const data = {
+        nama_project: form.nama_project,
+        photo_url: photoUrl,
+        jobdesk: form.jobdesk,
+        deskripsi: form.deskripsi,
+      };
+
       const response = isEdit
-        ? await updatePortfolio(Number(id), form)
-        : await createPortfolio(form);
+        ? await updatePortfolio(Number(id), data)
+        : await createPortfolio(data);
 
       if (response.success) {
         navigate("/admin/dashboard");
@@ -139,32 +178,10 @@ export default function PortfolioForm() {
               />
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="photo_url" className="text-sm font-heading tracking-wider text-arcane-300">
-                URL Foto <span className="text-blood-500">*</span>
-              </label>
-              <input
-                id="photo_url"
-                name="photo_url"
-                type="url"
-                value={form.photo_url}
-                onChange={handleChange}
-                className="w-full rounded-md border border-arcane-900 bg-void-950 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
-                placeholder="https://example.com/image.jpg"
-              />
-              {form.photo_url && (
-                <div className="mt-2 rounded-lg border border-arcane-900/50 overflow-hidden bg-muted">
-                  <img
-                    src={form.photo_url}
-                    alt="Preview"
-                    className="h-40 w-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = "none";
-                    }}
-                  />
-                </div>
-              )}
-            </div>
+            <ImageUploadField
+              value={imagePreview}
+              onChange={handleImageChange}
+            />
 
             <div className="space-y-2">
               <label htmlFor="jobdesk" className="text-sm font-heading tracking-wider text-arcane-300">

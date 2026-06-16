@@ -1,7 +1,25 @@
 import { useEffect, useState } from "react";
 import { getPortfolios } from "@/lib/api";
 import type { Portfolio } from "@/types";
-import { Loader2, ExternalLink, FolderOpen } from "lucide-react";
+import { Loader2, ExternalLink, FolderOpen, ImageIcon } from "lucide-react";
+
+function ImageCard({ photoUrl, alt }: { photoUrl: string; alt: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!photoUrl || failed) {
+    return <ImageIcon className="h-12 w-12 text-arcane-700/50" />;
+  }
+
+  return (
+    <img
+      src={photoUrl}
+      alt={alt}
+      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
+  );
+}
 
 export default function Projects() {
   const [projects, setProjects] = useState<Portfolio[]>([]);
@@ -63,12 +81,8 @@ export default function Projects() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project) => (
             <div key={project.id} className="group rounded-xl border border-arcane-900/50 bg-card overflow-hidden shadow-sm hover:shadow-lg hover:border-arcane-700 transition-all duration-300">
-              <div className="aspect-video overflow-hidden bg-muted">
-                <img src={project.photoUrl} alt={project.namaProject}
-                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = "https://via.placeholder.com/800x450?text=No+Image"; }}
-                />
+              <div className="aspect-video overflow-hidden bg-muted flex items-center justify-center">
+                <ImageCard photoUrl={project.photoUrl} alt={project.namaProject} />
               </div>
               <div className="p-5">
                 <div className="flex items-start justify-between gap-2 mb-2">

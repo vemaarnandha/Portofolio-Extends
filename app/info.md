@@ -8,10 +8,10 @@ Components (40+):
   accordion, alert-dialog, alert, aspect-ratio, avatar, badge, breadcrumb,
   button-group, button, calendar, card, carousel, chart, checkbox, collapsible,
   command, context-menu, dialog, drawer, dropdown-menu, empty, field, form,
-  hover-card, input-group, input-otp, input, item, kbd, label, menubar,
-  navigation-menu, pagination, popover, progress, radio-group, resizable,
-  scroll-area, select, separator, sheet, sidebar, skeleton, slider, sonner,
-  spinner, switch, table, tabs, textarea, toggle-group, toggle, tooltip
+  hover-card, image-upload, input-group, input-otp, input, item, kbd, label,
+  menubar, navigation-menu, pagination, popover, progress, radio-group,
+  resizable, scroll-area, select, separator, sheet, sidebar, skeleton, slider,
+  sonner, spinner, switch, table, tabs, textarea, toggle-group, toggle, tooltip
 
 Usage:
   import { Button } from '@/components/ui/button'

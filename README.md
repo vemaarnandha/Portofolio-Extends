@@ -9,6 +9,7 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 | Frontend | React 19 + TypeScript + Vite + Tailwind CSS + shadcn/ui |
 | Backend | Hono + Cloudflare Workers |
 | Database | Supabase (PostgreSQL) via @supabase/supabase-js |
+| Storage | Supabase Storage (bucket `project-images`) |
 | Auth | JWT manual (jose) + PBKDF2 password hashing |
 
 ## Struktur Folder
@@ -17,7 +18,8 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 /mnt/agents/output/
 ├── app/                    # Frontend (React + Vite)
 │   ├── src/
-│   │   ├── components/     # Navbar, Footer
+│   │   ├── components/     # Navbar, Footer, UI components
+│   │   │   └── ui/         # shadcn/ui + ImageUploadField
 │   │   ├── pages/          # Home, Projects, About, Contact, Admin
 │   │   ├── lib/            # API client, Auth utilities
 │   │   ├── types/          # TypeScript interfaces
@@ -50,8 +52,8 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 ### Admin (Protected)
 - **/admin/login** - Form login dengan JWT
 - **/admin/dashboard** - Tabel CRUD portfolio
-- **/admin/portfolio/new** - Form tambah portfolio
-- **/admin/portfolio/:id/edit** - Form edit portfolio
+- **/admin/portfolio/new** - Form tambah portfolio (dengan upload gambar drag-drop)
+- **/admin/portfolio/:id/edit** - Form edit portfolio (dengan upload gambar drag-drop)
 
 ## Backend Endpoints
 
@@ -63,6 +65,8 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 | POST | /api/portfolio | JWT | Tambah portfolio |
 | PUT | /api/portfolio/:id | JWT | Update portfolio |
 | DELETE | /api/portfolio/:id | JWT | Hapus portfolio |
+| POST | /api/portfolio/upload-image | JWT | Upload gambar ke Supabase Storage (multipart) |
+| DELETE | /api/portfolio/:id/image | JWT | Hapus gambar dari storage & null-kan URL |
 
 Response format: `{ success: boolean, data: any, message: string }`
 
@@ -87,6 +91,26 @@ npm run dev     # http://localhost:5173
 1. **Buat project** di https://supabase.com
 2. **SQL Editor** → buka `backend/supabase-setup.sql`, jalankan semua query untuk membuat tabel `portfolio` dan `admin_users`
 3. **Project Settings → API** — catet `Project URL` (SUPABASE_URL) dan `anon public` key (SUPABASE_ANON_KEY)
+4. **Setup Storage** — Buat bucket `project-images` untuk upload gambar:
+
+```sql
+-- Di Supabase SQL Editor
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('project-images', 'project-images', true);
+
+-- Public read
+CREATE POLICY "Allow public read"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'project-images');
+
+-- Authenticated write
+CREATE POLICY "Allow authenticated upload"
+ON storage.objects FOR INSERT
+WITH CHECK (
+  bucket_id = 'project-images' AND
+  auth.role() = 'authenticated'
+);
+```
 
 ### 3. Generate Password Hash (untuk seed admin)
 
@@ -146,6 +170,7 @@ cd backend
 npx wrangler secret put JWT_SECRET
 npx wrangler secret put SUPABASE_URL
 npx wrangler secret put SUPABASE_ANON_KEY
+npx wrangler secret put SUPABASE_SERVICE_ROLE
 
 # Update CORS origin di wrangler.toml
 # [vars]

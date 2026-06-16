@@ -22,3 +22,19 @@ export interface LoginResponse {
   token: string;
   user: User;
 }
+
+export interface UploadResponse {
+  success: boolean;
+  url?: string;
+  path?: string;
+  error?: string;
+}
+
+export interface ProjectFormData {
+  nama_project: string;
+  photo_url: string;
+  jobdesk: string;
+  deskripsi: string;
+  image?: File | null;
+  imagePreview?: string;
+}
