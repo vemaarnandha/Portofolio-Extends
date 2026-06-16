@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// .wrangler/tmp/bundle-DIsDIs/strip-cf-connecting-ip-header.js
+// .wrangler/tmp/bundle-ORdnYw/strip-cf-connecting-ip-header.js
 function stripCfConnectingIPHeader(input, init) {
   const request = new Request(input, init);
   request.headers.delete("CF-Connecting-IP");
@@ -2180,6 +2180,175 @@ var cors = /* @__PURE__ */ __name((options) => {
     }
   }, "cors2");
 }, "cors");
+
+// node_modules/hono/dist/utils/cookie.js
+var validCookieNameRegEx = /^[\w!#$%&'*.^`|~+-]+$/;
+var validCookieValueRegEx = /^[ !#-:<-[\]-~]*$/;
+var trimCookieWhitespace = /* @__PURE__ */ __name((value) => {
+  let start = 0;
+  let end = value.length;
+  while (start < end) {
+    const charCode = value.charCodeAt(start);
+    if (charCode !== 32 && charCode !== 9) {
+      break;
+    }
+    start++;
+  }
+  while (end > start) {
+    const charCode = value.charCodeAt(end - 1);
+    if (charCode !== 32 && charCode !== 9) {
+      break;
+    }
+    end--;
+  }
+  return start === 0 && end === value.length ? value : value.slice(start, end);
+}, "trimCookieWhitespace");
+var parse = /* @__PURE__ */ __name((cookie, name) => {
+  if (name && cookie.indexOf(name) === -1) {
+    return {};
+  }
+  const pairs = cookie.split(";");
+  const parsedCookie = /* @__PURE__ */ Object.create(null);
+  for (const pairStr of pairs) {
+    const valueStartPos = pairStr.indexOf("=");
+    if (valueStartPos === -1) {
+      continue;
+    }
+    const cookieName = trimCookieWhitespace(pairStr.substring(0, valueStartPos));
+    if (name && name !== cookieName || !validCookieNameRegEx.test(cookieName) || cookieName in parsedCookie) {
+      continue;
+    }
+    let cookieValue = trimCookieWhitespace(pairStr.substring(valueStartPos + 1));
+    if (cookieValue.startsWith('"') && cookieValue.endsWith('"')) {
+      cookieValue = cookieValue.slice(1, -1);
+    }
+    if (validCookieValueRegEx.test(cookieValue)) {
+      parsedCookie[cookieName] = cookieValue.indexOf("%") !== -1 ? tryDecode(cookieValue, decodeURIComponent_) : cookieValue;
+      if (name) {
+        break;
+      }
+    }
+  }
+  return parsedCookie;
+}, "parse");
+var _serialize = /* @__PURE__ */ __name((name, value, opt = {}) => {
+  if (!validCookieNameRegEx.test(name)) {
+    throw new Error("Invalid cookie name");
+  }
+  let cookie = `${name}=${value}`;
+  if (name.startsWith("__Secure-") && !opt.secure) {
+    throw new Error("__Secure- Cookie must have Secure attributes");
+  }
+  if (name.startsWith("__Host-")) {
+    if (!opt.secure) {
+      throw new Error("__Host- Cookie must have Secure attributes");
+    }
+    if (opt.path !== "/") {
+      throw new Error('__Host- Cookie must have Path attributes with "/"');
+    }
+    if (opt.domain) {
+      throw new Error("__Host- Cookie must not have Domain attributes");
+    }
+  }
+  for (const key of ["domain", "path", "sameSite", "priority"]) {
+    if (opt[key] && /[;\r\n]/.test(opt[key])) {
+      throw new Error(`${key} must not contain ";", "\\r", or "\\n"`);
+    }
+  }
+  if (opt && typeof opt.maxAge === "number" && opt.maxAge >= 0) {
+    if (opt.maxAge > 3456e4) {
+      throw new Error(
+        "Cookies Max-Age SHOULD NOT be greater than 400 days (34560000 seconds) in duration."
+      );
+    }
+    cookie += `; Max-Age=${opt.maxAge | 0}`;
+  }
+  if (opt.domain && opt.prefix !== "host") {
+    cookie += `; Domain=${opt.domain}`;
+  }
+  if (opt.path) {
+    cookie += `; Path=${opt.path}`;
+  }
+  if (opt.expires) {
+    if (opt.expires.getTime() - Date.now() > 3456e7) {
+      throw new Error(
+        "Cookies Expires SHOULD NOT be greater than 400 days (34560000 seconds) in the future."
+      );
+    }
+    cookie += `; Expires=${opt.expires.toUTCString()}`;
+  }
+  if (opt.httpOnly) {
+    cookie += "; HttpOnly";
+  }
+  if (opt.secure) {
+    cookie += "; Secure";
+  }
+  if (opt.sameSite) {
+    cookie += `; SameSite=${opt.sameSite.charAt(0).toUpperCase() + opt.sameSite.slice(1)}`;
+  }
+  if (opt.priority) {
+    cookie += `; Priority=${opt.priority.charAt(0).toUpperCase() + opt.priority.slice(1)}`;
+  }
+  if (opt.partitioned) {
+    if (!opt.secure) {
+      throw new Error("Partitioned Cookie must have Secure attributes");
+    }
+    cookie += "; Partitioned";
+  }
+  return cookie;
+}, "_serialize");
+var serialize = /* @__PURE__ */ __name((name, value, opt) => {
+  value = encodeURIComponent(value);
+  return _serialize(name, value, opt);
+}, "serialize");
+
+// node_modules/hono/dist/helper/cookie/index.js
+var getCookie = /* @__PURE__ */ __name((c, key, prefix) => {
+  const cookie = c.req.raw.headers.get("Cookie");
+  if (typeof key === "string") {
+    if (!cookie) {
+      return void 0;
+    }
+    let finalKey = key;
+    if (prefix === "secure") {
+      finalKey = "__Secure-" + key;
+    } else if (prefix === "host") {
+      finalKey = "__Host-" + key;
+    }
+    const obj2 = parse(cookie, finalKey);
+    return obj2[finalKey];
+  }
+  if (!cookie) {
+    return {};
+  }
+  const obj = parse(cookie);
+  return obj;
+}, "getCookie");
+var generateCookie = /* @__PURE__ */ __name((name, value, opt) => {
+  let cookie;
+  if (opt?.prefix === "secure") {
+    cookie = serialize("__Secure-" + name, value, { path: "/", ...opt, secure: true });
+  } else if (opt?.prefix === "host") {
+    cookie = serialize("__Host-" + name, value, {
+      ...opt,
+      path: "/",
+      secure: true,
+      domain: void 0
+    });
+  } else {
+    cookie = serialize(name, value, { path: "/", ...opt });
+  }
+  return cookie;
+}, "generateCookie");
+var setCookie = /* @__PURE__ */ __name((c, name, value, opt) => {
+  const cookie = generateCookie(name, value, opt);
+  c.header("Set-Cookie", cookie, { append: true });
+}, "setCookie");
+var deleteCookie = /* @__PURE__ */ __name((c, name, opt) => {
+  const deletedCookie = getCookie(c, name, opt?.prefix);
+  setCookie(c, name, "", { ...opt, maxAge: 0 });
+  return deletedCookie;
+}, "deleteCookie");
 
 // node_modules/tslib/tslib.es6.mjs
 function __rest(s, e) {
@@ -24174,7 +24343,7 @@ function subtleMapping(jwk) {
   return { algorithm, keyUsages };
 }
 __name(subtleMapping, "subtleMapping");
-var parse = /* @__PURE__ */ __name(async (jwk) => {
+var parse2 = /* @__PURE__ */ __name(async (jwk) => {
   if (!jwk.alg) {
     throw new TypeError('"alg" argument is required when "jwk.alg" is not present');
   }
@@ -24189,7 +24358,7 @@ var parse = /* @__PURE__ */ __name(async (jwk) => {
   delete keyData.use;
   return webcrypto_default.subtle.importKey("jwk", keyData, ...rest);
 }, "parse");
-var jwk_to_key_default = parse;
+var jwk_to_key_default = parse2;
 
 // node_modules/jose/dist/browser/runtime/normalize_key.js
 var exportKeyValue = /* @__PURE__ */ __name((k) => decode(k), "exportKeyValue");
@@ -24955,9 +25124,9 @@ var SignJWT = class extends ProduceJWT {
 __name(SignJWT, "SignJWT");
 
 // src/lib/jwt.ts
-async function createToken(payload, secret) {
+async function createToken(payload, secret, expiresIn = "15m") {
   const secretKey = new TextEncoder().encode(secret);
-  return new SignJWT({ ...payload }).setProtectedHeader({ alg: "HS256" }).setIssuedAt().setExpirationTime("24h").sign(secretKey);
+  return new SignJWT({ ...payload }).setProtectedHeader({ alg: "HS256" }).setIssuedAt().setExpirationTime(expiresIn).sign(secretKey);
 }
 __name(createToken, "createToken");
 async function verifyToken(token, secret) {
@@ -24970,6 +25139,140 @@ async function verifyToken(token, secret) {
   }
 }
 __name(verifyToken, "verifyToken");
+
+// src/lib/session.ts
+var SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1e3;
+var REFRESH_TOKEN_BYTES = 32;
+function generateRefreshToken() {
+  const bytes = crypto.getRandomValues(new Uint8Array(REFRESH_TOKEN_BYTES));
+  return Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+__name(generateRefreshToken, "generateRefreshToken");
+function getSessionExpiry() {
+  return new Date(Date.now() + SESSION_DURATION_MS).toISOString();
+}
+__name(getSessionExpiry, "getSessionExpiry");
+async function createSession(env, userId, userAgent, ipAddress) {
+  const supabase = getServiceSupabase(env);
+  const refreshToken = generateRefreshToken();
+  const expiresAt2 = getSessionExpiry();
+  const { error } = await supabase.from("admin_sessions").insert({
+    user_id: userId,
+    refresh_token: refreshToken,
+    user_agent: userAgent,
+    ip_address: ipAddress,
+    expires_at: expiresAt2
+  });
+  if (error)
+    throw error;
+  return { refreshToken, expiresAt: expiresAt2 };
+}
+__name(createSession, "createSession");
+async function findSessionByRefreshToken(env, refreshToken) {
+  const supabase = getServiceSupabase(env);
+  const { data } = await supabase.from("admin_sessions").select("id, user_id, expires_at").eq("refresh_token", refreshToken).limit(1).single();
+  if (!data)
+    return null;
+  return { id: data.id, userId: data.user_id, expiresAt: data.expires_at };
+}
+__name(findSessionByRefreshToken, "findSessionByRefreshToken");
+async function rotateSession(env, sessionId) {
+  const supabase = getServiceSupabase(env);
+  const newRefreshToken = generateRefreshToken();
+  const expiresAt2 = getSessionExpiry();
+  const { error } = await supabase.from("admin_sessions").update({
+    refresh_token: newRefreshToken,
+    expires_at: expiresAt2,
+    last_active_at: (/* @__PURE__ */ new Date()).toISOString()
+  }).eq("id", sessionId);
+  if (error)
+    throw error;
+  return newRefreshToken;
+}
+__name(rotateSession, "rotateSession");
+async function deleteSession(env, sessionId) {
+  const supabase = getServiceSupabase(env);
+  await supabase.from("admin_sessions").delete().eq("id", sessionId);
+}
+__name(deleteSession, "deleteSession");
+async function deleteAllUserSessions(env, userId) {
+  const supabase = getServiceSupabase(env);
+  await supabase.from("admin_sessions").delete().eq("user_id", userId);
+}
+__name(deleteAllUserSessions, "deleteAllUserSessions");
+
+// src/lib/auth-middleware.ts
+var JWT_EXPIRY = "15m";
+async function setAuthCookies(c, userId, email) {
+  const token = await createToken({ userId, email }, c.env.JWT_SECRET, JWT_EXPIRY);
+  setCookie(c, "token", token, {
+    httpOnly: true,
+    sameSite: "Lax",
+    secure: false,
+    path: "/",
+    maxAge: 15 * 60
+  });
+}
+__name(setAuthCookies, "setAuthCookies");
+async function authMiddleware(c, next) {
+  try {
+    const token = getCookie(c, "token");
+    if (token) {
+      const payload = await verifyToken(token, c.env.JWT_SECRET);
+      if (payload) {
+        const expiresIn = payload.exp - Math.floor(Date.now() / 1e3);
+        if (expiresIn < 120) {
+          setAuthCookies(c, payload.userId, payload.email);
+        }
+        c.set("user", payload);
+        return next();
+      }
+    }
+    const refreshToken = getCookie(c, "refresh_token");
+    if (!refreshToken) {
+      return c.json({ success: false, data: null, message: "Sesi tidak valid, silakan login ulang" }, 401);
+    }
+    const session = await findSessionByRefreshToken(c.env, refreshToken);
+    if (!session) {
+      deleteCookie(c, "token", { path: "/" });
+      deleteCookie(c, "refresh_token", { path: "/" });
+      return c.json({ success: false, data: null, message: "Sesi tidak valid, silakan login ulang" }, 401);
+    }
+    if (new Date(session.expiresAt) < /* @__PURE__ */ new Date()) {
+      await deleteSession(c.env, session.id);
+      deleteCookie(c, "token", { path: "/" });
+      deleteCookie(c, "refresh_token", { path: "/" });
+      return c.json({ success: false, data: null, message: "Sesi telah kedaluwarsa, silakan login ulang" }, 401);
+    }
+    const supabase = getSupabase(c.env);
+    const { data: user } = await supabase.from("admin_users").select("id, email").eq("id", session.userId).limit(1).single();
+    if (!user) {
+      return c.json({ success: false, data: null, message: "User tidak ditemukan" }, 401);
+    }
+    const newRefreshToken = await rotateSession(c.env, session.id);
+    const newToken = await createToken({ userId: user.id, email: user.email }, c.env.JWT_SECRET, JWT_EXPIRY);
+    setCookie(c, "token", newToken, {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: false,
+      path: "/",
+      maxAge: 15 * 60
+    });
+    setCookie(c, "refresh_token", newRefreshToken, {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: false,
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60
+    });
+    c.set("user", { userId: user.id, email: user.email, sessionId: session.id });
+    await next();
+  } catch (error) {
+    console.error("Auth middleware error:", error);
+    return c.json({ success: false, data: null, message: "Terjadi kesalahan autentikasi" }, 500);
+  }
+}
+__name(authMiddleware, "authMiddleware");
 
 // src/routes/auth.ts
 var auth = new Hono2();
@@ -24991,10 +25294,27 @@ auth.post("/login", async (c) => {
     if (!isValid) {
       return c.json({ success: false, data: null, message: "Email atau password salah" }, 401);
     }
-    const token = await createToken({ userId: user.id, email: user.email }, c.env.JWT_SECRET);
+    const userAgent = c.req.header("User-Agent") || "";
+    const ipAddress = c.req.header("CF-Connecting-IP") || c.req.header("X-Forwarded-For") || "";
+    const { refreshToken, expiresAt: expiresAt2 } = await createSession(c.env, user.id, userAgent, ipAddress);
+    const token = await createToken({ userId: user.id, email: user.email }, c.env.JWT_SECRET, "15m");
+    setCookie(c, "token", token, {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: false,
+      path: "/",
+      maxAge: 15 * 60
+    });
+    setCookie(c, "refresh_token", refreshToken, {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: false,
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60
+    });
     return c.json({
       success: true,
-      data: { token, user: { id: user.id, email: user.email } },
+      data: { user: { id: user.id, email: user.email } },
       message: "Login berhasil"
     });
   } catch (error) {
@@ -25002,24 +25322,99 @@ auth.post("/login", async (c) => {
     return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
   }
 });
+auth.post("/refresh", async (c) => {
+  try {
+    const refreshToken = getCookie(c, "refresh_token");
+    if (!refreshToken) {
+      return c.json({ success: false, data: null, message: "Refresh token tidak ditemukan" }, 401);
+    }
+    const session = await findSessionByRefreshToken(c.env, refreshToken);
+    if (!session) {
+      deleteCookie(c, "token", { path: "/" });
+      deleteCookie(c, "refresh_token", { path: "/" });
+      return c.json({ success: false, data: null, message: "Refresh token tidak valid" }, 401);
+    }
+    if (new Date(session.expiresAt) < /* @__PURE__ */ new Date()) {
+      await deleteSession(c.env, session.id);
+      deleteCookie(c, "token", { path: "/" });
+      deleteCookie(c, "refresh_token", { path: "/" });
+      return c.json({ success: false, data: null, message: "Sesi telah kedaluwarsa" }, 401);
+    }
+    const supabase = getSupabase(c.env);
+    const { data: user } = await supabase.from("admin_users").select("id, email").eq("id", session.userId).limit(1).single();
+    if (!user) {
+      return c.json({ success: false, data: null, message: "User tidak ditemukan" }, 401);
+    }
+    const newRefreshToken = await rotateSession(c.env, session.id);
+    const token = await createToken({ userId: user.id, email: user.email }, c.env.JWT_SECRET, "15m");
+    setCookie(c, "token", token, {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: false,
+      path: "/",
+      maxAge: 15 * 60
+    });
+    setCookie(c, "refresh_token", newRefreshToken, {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: false,
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60
+    });
+    return c.json({
+      success: true,
+      data: { user: { id: user.id, email: user.email } },
+      message: "Token berhasil diperbarui"
+    });
+  } catch (error) {
+    console.error("Refresh error:", error);
+    return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
+  }
+});
+auth.post("/logout", async (c) => {
+  try {
+    const token = getCookie(c, "token");
+    if (token) {
+      const payload = await verifyToken(token, c.env.JWT_SECRET);
+      if (payload) {
+        await deleteAllUserSessions(c.env, payload.userId);
+      }
+    }
+    const refreshToken = getCookie(c, "refresh_token");
+    if (refreshToken) {
+      const session = await findSessionByRefreshToken(c.env, refreshToken);
+      if (session) {
+        await deleteSession(c.env, session.id);
+      }
+    }
+    deleteCookie(c, "token", { path: "/" });
+    deleteCookie(c, "refresh_token", { path: "/" });
+    return c.json({ success: true, data: null, message: "Logout berhasil" });
+  } catch (error) {
+    console.error("Logout error:", error);
+    return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
+  }
+});
+auth.get("/me", authMiddleware, async (c) => {
+  try {
+    const user = c.get("user");
+    if (!user) {
+      return c.json({ success: false, data: null, message: "User tidak ditemukan" }, 401);
+    }
+    return c.json({
+      success: true,
+      data: { id: user.userId, email: user.email },
+      message: "Session valid"
+    });
+  } catch (error) {
+    console.error("Me error:", error);
+    return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
+  }
+});
 var auth_default = auth;
 
 // src/routes/portfolio.ts
 var portfolioRoutes = new Hono2();
-async function authMiddleware(c, next) {
-  const authHeader = c.req.header("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return c.json({ success: false, data: null, message: "Token tidak valid" }, 401);
-  }
-  const token = authHeader.substring(7);
-  const payload = await verifyToken(token, c.env.JWT_SECRET);
-  if (!payload) {
-    return c.json({ success: false, data: null, message: "Token tidak valid atau sudah expired" }, 401);
-  }
-  c.set("user", payload);
-  await next();
-}
-__name(authMiddleware, "authMiddleware");
 portfolioRoutes.post("/upload-image", authMiddleware, async (c) => {
   try {
     const body = await c.req.parseBody();
@@ -25256,7 +25651,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-DIsDIs/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-ORdnYw/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -25288,7 +25683,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-DIsDIs/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-ORdnYw/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

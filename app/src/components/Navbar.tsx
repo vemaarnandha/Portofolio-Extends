@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, Code2 } from "lucide-react";
+import { isAuthenticated } from "@/lib/auth";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -11,7 +12,12 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    isAuthenticated().then(setLoggedIn);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 border-b border-arcane-900/50 bg-void-950/95 backdrop-blur supports-[backdrop-filter]:bg-void-950/60">
@@ -30,10 +36,10 @@ export default function Navbar() {
             >{link.label}</Link>
           ))}
           <Link
-            to="/admin/login"
+            to={loggedIn ? "/admin/dashboard" : "/admin/login"}
             className="rounded-md bg-arcane-500 px-4 py-2 text-sm font-medium text-void-950 hover:bg-arcane-400 hover:shadow-glow transition-all duration-200 active:scale-[0.97]"
           >
-            Admin
+            {loggedIn ? "Dashboard" : "Admin"}
           </Link>
         </div>
         <button
@@ -55,10 +61,10 @@ export default function Navbar() {
             >{link.label}</Link>
           ))}
           <Link
-            to="/admin/login" onClick={() => setMobileOpen(false)}
+            to={loggedIn ? "/admin/dashboard" : "/admin/login"} onClick={() => setMobileOpen(false)}
             className="block rounded-md bg-arcane-500 px-4 py-2 text-sm font-medium text-void-950 hover:bg-arcane-400 transition-colors text-center"
           >
-            Admin
+            {loggedIn ? "Dashboard" : "Admin"}
           </Link>
         </div>
       )}

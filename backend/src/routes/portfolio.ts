@@ -1,31 +1,9 @@
 import { Hono } from "hono";
 import { getSupabase, getServiceSupabase, toCamelCase, IMAGE_ALLOWED_MIMES, IMAGE_MAX_SIZE, generateImagePath } from "../lib/supabase";
-import { verifyToken } from "../lib/jwt";
+import { authMiddleware } from "../lib/auth-middleware";
 import type { Env } from "../types/env";
 
-interface JWTPayload {
-  userId: number;
-  email: string;
-}
-
 const portfolioRoutes = new Hono<{ Bindings: Env }>();
-
-async function authMiddleware(c: any, next: any) {
-  const authHeader = c.req.header("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return c.json({ success: false, data: null, message: "Token tidak valid" }, 401);
-  }
-
-  const token = authHeader.substring(7);
-  const payload = await verifyToken<JWTPayload>(token, c.env.JWT_SECRET);
-
-  if (!payload) {
-    return c.json({ success: false, data: null, message: "Token tidak valid atau sudah expired" }, 401);
-  }
-
-  c.set("user", payload);
-  await next();
-}
 
 // POST /api/portfolio/upload-image
 portfolioRoutes.post("/upload-image", authMiddleware, async (c) => {

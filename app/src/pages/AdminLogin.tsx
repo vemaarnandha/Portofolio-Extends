@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/lib/api";
-import { setToken } from "@/lib/auth";
 import { LogIn, Loader2, AlertCircle, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -18,8 +17,7 @@ export default function AdminLogin() {
     setLoading(true);
     try {
       const response = await login(email, password);
-      if (response.success && response.data.token) {
-        setToken(response.data.token);
+      if (response.success) {
         navigate("/admin/dashboard");
       } else { setError(response.message || "Login gagal"); }
     } catch (err) { setError(err instanceof Error ? err.message : "Terjadi kesalahan saat login"); }

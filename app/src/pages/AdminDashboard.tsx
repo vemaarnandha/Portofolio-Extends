@@ -8,15 +8,28 @@ import { Link } from "react-router-dom";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
+  const [authLoading, setAuthLoading] = useState(true);
   const [projects, setProjects] = useState<Portfolio[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => { if (!isAuthenticated()) navigate("/admin/login"); }, [navigate]);
+  useEffect(() => {
+    let mounted = true;
+    async function checkAuth() {
+      const authed = await isAuthenticated();
+      if (mounted) {
+        if (!authed) navigate("/admin/login");
+        else setAuthLoading(false);
+      }
+    }
+    checkAuth();
+    return () => { mounted = false; };
+  }, [navigate]);
 
   useEffect(() => {
+    if (authLoading) return;
     let mounted = true;
     async function fetchData() {
       try { setLoading(true); setError(""); const response = await getPortfolios(); if (mounted) { if (response.success) setProjects(response.data); else setError(response.message || "Gagal memuat data"); } }
@@ -25,7 +38,7 @@ export default function AdminDashboard() {
     }
     fetchData();
     return () => { mounted = false; };
-  }, []);
+  }, [authLoading, navigate]);
 
   async function handleDelete(id: number) {
     if (!confirm("Apakah Anda yakin ingin menghapus portfolio ini?")) return;
@@ -35,7 +48,7 @@ export default function AdminDashboard() {
     finally { setDeleting(false); setDeleteId(null); }
   }
 
-  if (loading) return (
+  if (authLoading || loading) return (
     <div className="flex min-h-screen items-center justify-center">
       <Loader2 className="h-8 w-8 animate-spin text-arcane-500" />
     </div>
@@ -90,7 +103,7 @@ export default function AdminDashboard() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-arcane-900/50 bg-arcane-950/30">
-                    <th className="px-4 py-3 text-left font-heading tracking-wider text-arcane-400 font-medium">ID</th>
+                    <th className="px-4 py-3 text-left font-heading tracking-wider text-arcane-400 font-medium">No</th>
                     <th className="px-4 py-3 text-left font-heading tracking-wider text-arcane-400 font-medium">Gambar</th>
                     <th className="px-4 py-3 text-left font-heading tracking-wider text-arcane-400 font-medium">Nama Project</th>
                     <th className="px-4 py-3 text-left font-heading tracking-wider text-arcane-400 font-medium">Jobdesk</th>
@@ -99,9 +112,9 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-arcane-900/30">
-                  {projects.map((item) => (
+                  {projects.map((item, index) => (
                     <tr key={item.id} className="hover:bg-arcane-950/20 transition-colors">
-                      <td className="px-4 py-3 text-arcane-700 font-mono">#{item.id}</td>
+                      <td className="px-4 py-3 text-arcane-700 font-mono">{index + 1}</td>
                       <td className="px-4 py-3">
                         <img src={item.photoUrl} alt={item.namaProject}
                           className="h-12 w-16 rounded object-cover border border-arcane-900/50"

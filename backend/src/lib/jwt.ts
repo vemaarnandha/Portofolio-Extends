@@ -3,12 +3,12 @@
  */
 import { SignJWT, jwtVerify } from "jose";
 
-export async function createToken(payload: object, secret: string): Promise<string> {
+export async function createToken(payload: object, secret: string, expiresIn = "15m"): Promise<string> {
   const secretKey = new TextEncoder().encode(secret);
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("24h")
+    .setExpirationTime(expiresIn)
     .sign(secretKey);
 }
 

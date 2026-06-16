@@ -1,8 +1,7 @@
 import type { ApiResponse, Portfolio, LoginResponse, UploadResponse } from "@/types";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8787";
+export const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 
-// Helper untuk handle response
 async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: "Terjadi kesalahan" }));
@@ -11,51 +10,49 @@ async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
   return response.json();
 }
 
-// Helper untuk get headers dengan auth token
-function getHeaders(): HeadersInit {
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
+function fetchOpts(method: string, body?: any): RequestInit {
+  const opts: RequestInit = {
+    method,
+    credentials: "include" as RequestCredentials,
   };
-  const token = localStorage.getItem("token");
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+  if (body) {
+    opts.headers = { "Content-Type": "application/json" };
+    opts.body = JSON.stringify(body);
   }
-  return headers;
+  return opts;
 }
 
-// AUTH API
 export async function login(email: string, password: string): Promise<ApiResponse<LoginResponse>> {
   const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ email, password }),
   });
   return handleResponse<LoginResponse>(response);
 }
 
-// PORTFOLIO API - Public
 export async function getPortfolios(): Promise<ApiResponse<Portfolio[]>> {
-  const response = await fetch(`${API_BASE_URL}/api/portfolio`);
+  const response = await fetch(`${API_BASE_URL}/api/portfolio`, {
+    credentials: "include",
+  });
   return handleResponse<Portfolio[]>(response);
 }
 
 export async function getPortfolioById(id: number): Promise<ApiResponse<Portfolio>> {
-  const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`);
+  const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, {
+    credentials: "include",
+  });
   return handleResponse<Portfolio>(response);
 }
 
-// PORTFOLIO API - Protected (Admin)
 export async function createPortfolio(data: {
   nama_project: string;
   photo_url: string;
   jobdesk: string;
   deskripsi: string;
 }): Promise<ApiResponse<Portfolio>> {
-  const response = await fetch(`${API_BASE_URL}/api/portfolio`, {
-    method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify(data),
-  });
+  const response = await fetch(`${API_BASE_URL}/api/portfolio`, fetchOpts("POST", data));
   return handleResponse<Portfolio>(response);
 }
 
@@ -68,23 +65,18 @@ export async function updatePortfolio(
     deskripsi: string;
   }
 ): Promise<ApiResponse<Portfolio>> {
-  const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, {
-    method: "PUT",
-    headers: getHeaders(),
-    body: JSON.stringify(data),
-  });
+  const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, fetchOpts("PUT", data));
   return handleResponse<Portfolio>(response);
 }
 
 export async function deletePortfolio(id: number): Promise<ApiResponse<Portfolio>> {
   const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, {
     method: "DELETE",
-    headers: getHeaders(),
+    credentials: "include",
   });
   return handleResponse<Portfolio>(response);
 }
 
-// IMAGE UPLOAD API
 export async function uploadProjectImage(
   projectId: number,
   file: File
@@ -95,9 +87,7 @@ export async function uploadProjectImage(
 
   const response = await fetch(`${API_BASE_URL}/api/portfolio/upload-image`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
+    credentials: "include",
     body: formData,
   });
 
@@ -109,7 +99,7 @@ export async function deleteProjectImage(projectId: number): Promise<UploadRespo
     `${API_BASE_URL}/api/portfolio/${projectId}/image`,
     {
       method: "DELETE",
-      headers: getHeaders(),
+      credentials: "include",
     }
   );
 

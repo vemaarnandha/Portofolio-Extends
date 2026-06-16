@@ -24,9 +24,25 @@ CREATE TABLE IF NOT EXISTS admin_users (
 -- 3. INDEX
 CREATE INDEX IF NOT EXISTS idx_portfolio_created_at ON portfolio(created_at);
 
--- 4. NONAKTIFKAN RLS (karena auth dikelola JWT manual di backend)
+-- 4. TABEL ADMIN SESSIONS
+CREATE TABLE IF NOT EXISTS admin_sessions (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+  refresh_token VARCHAR(255) NOT NULL UNIQUE,
+  user_agent VARCHAR(500) DEFAULT '',
+  ip_address VARCHAR(45) DEFAULT '',
+  expires_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  last_active_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_admin_sessions_refresh_token ON admin_sessions(refresh_token);
+CREATE INDEX IF NOT EXISTS idx_admin_sessions_user_id ON admin_sessions(user_id);
+
+-- 5. NONAKTIFKAN RLS (karena auth dikelola JWT manual di backend)
 ALTER TABLE portfolio DISABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE admin_sessions DISABLE ROW LEVEL SECURITY;
 
 -- ============================================================
 -- SEED DATA (UNCOMMENT setelah tabel dibuat)

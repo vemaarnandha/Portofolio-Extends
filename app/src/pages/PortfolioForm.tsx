@@ -11,6 +11,7 @@ export default function PortfolioForm() {
   const { id } = useParams<{ id: string }>();
   const isEdit = !!id;
 
+  const [authLoading, setAuthLoading] = useState(true);
   const [form, setForm] = useState({
     nama_project: "",
     photo_url: "",
@@ -24,9 +25,16 @@ export default function PortfolioForm() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/admin/login");
+    let mounted = true;
+    async function checkAuth() {
+      const authed = await isAuthenticated();
+      if (mounted) {
+        if (!authed) navigate("/admin/login");
+        else setAuthLoading(false);
+      }
     }
+    checkAuth();
+    return () => { mounted = false; };
   }, [navigate]);
 
   useEffect(() => {
@@ -126,7 +134,7 @@ export default function PortfolioForm() {
     }
   }
 
-  if (fetchLoading) {
+  if (authLoading || fetchLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-arcane-500" />
