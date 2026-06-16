@@ -10,7 +10,7 @@ export default function Footer() {
             <span>MyPortfolio</span>
           </div>
           <p className="text-sm text-arcane-300/60 text-center">
-            Dibangun dengan React, Hono & Turso. &copy; {new Date().getFullYear()}
+            Dibangun dengan React, Hono & Supabase. &copy; {new Date().getFullYear()}
           </p>
           <div className="flex items-center gap-4">
             <a href="https://github.com" target="_blank" rel="noopener noreferrer"

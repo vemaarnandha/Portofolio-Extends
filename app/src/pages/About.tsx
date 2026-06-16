@@ -3,7 +3,7 @@ import { Code2, Database, Server, Palette, Terminal, Globe } from "lucide-react"
 const skills = [
   { icon: Code2, label: "React & TypeScript", desc: "Frontend modern development" },
   { icon: Server, label: "Hono & Workers", desc: "Edge-ready backend" },
-  { icon: Database, label: "Turso & Drizzle", desc: "Type-safe database" },
+  { icon: Database, label: "Supabase & PostgreSQL", desc: "Serverless database" },
   { icon: Palette, label: "Tailwind CSS", desc: "Utility-first styling" },
   { icon: Terminal, label: "Vite", desc: "Fast build tooling" },
   { icon: Globe, label: "REST API Design", desc: "Clean API architecture" },

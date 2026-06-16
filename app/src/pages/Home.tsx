@@ -10,7 +10,7 @@ export default function Home() {
             <Zap className="mr-1.5 h-3.5 w-3.5 text-enchant-500" /> Fullstack Developer
           </div>
           <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-[0.05em] text-arcane-500 mb-6 animate-fade-from-abyss">
-            Halo, Saya <span className="text-enchant-400">Developer</span>
+            Halo, Saya <span className="text-enchant-400">Vema arnandha</span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-arcane-200/80 mb-10 leading-relaxed font-body animate-fade-from-abyss">
             Saya membangun aplikasi web modern yang cepat, responsif, dan scalable. Dari konsep hingga deployment, saya menghadirkan solusi digital terbaik.
@@ -62,7 +62,7 @@ export default function Home() {
                 Backend Development
               </h3>
               <p className="text-sm text-arcane-300/60 font-body">
-                Hono, Cloudflare Workers, dan tRPC untuk API yang cepat dan type-safe.
+                Hono, Cloudflare Workers, dan Supabase untuk API yang cepat dan aman.
               </p>
             </div>
             <div className="rounded-xl border border-arcane-900/50 bg-card p-6 shadow-sm hover:shadow-lg hover:border-arcane-700 transition-all duration-300">
@@ -73,7 +73,7 @@ export default function Home() {
                 Database & DevOps
               </h3>
               <p className="text-sm text-arcane-300/60 font-body">
-                Turso (libSQL), Drizzle ORM, dan deployment otomatis ke edge network.
+                Supabase (PostgreSQL) dan Cloudflare Workers untuk deployment otomatis ke edge network.
               </p>
             </div>
           </div>
