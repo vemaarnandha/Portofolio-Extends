@@ -6,7 +6,7 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 
 | Layer | Teknologi |
 |-------|-----------|
-| Frontend | React 19 + TypeScript + Vite + Tailwind CSS + shadcn/ui |
+| Frontend | React 19 + TypeScript + Vite + Tailwind CSS |
 | Backend | Hono + Cloudflare Workers |
 | Database | Supabase (PostgreSQL) via @supabase/supabase-js |
 | Storage | Supabase Storage (bucket `project-images`) |
@@ -19,7 +19,7 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 ├── app/                    # Frontend (React + Vite)
 │   ├── src/
 │   │   ├── components/     # Navbar, Footer, UI components
-│   │   │   └── ui/         # shadcn/ui + ImageUploadField
+│   │   │   └── ui/         # ImageUploadField & UI components
 │   │   ├── pages/          # Home, Projects, About, Contact, Admin
 │   │   ├── lib/            # API client, Auth utilities
 │   │   ├── types/          # TypeScript interfaces
@@ -31,12 +31,11 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 └── backend/                # Backend (Hono + Workers)
     ├── src/
     │   ├── routes/         # Auth & Portfolio routes
-    │   ├── db/             # Drizzle schema
-    │   ├── lib/            # JWT & Password utilities
+    │   ├── db/             # Type definitions (Portfolio, AdminUser)
+    │   ├── lib/            # JWT, Session, Password, Supabase utils
     │   ├── types/          # Environment types
     │   └── index.ts        # Hono app entry
-    ├── migrations/         # SQL migrations
-    ├── seed/               # Seed data
+    ├── supabase-setup.sql  # Schema & seed SQL
     ├── wrangler.toml
     └── package.json
 ```
@@ -59,14 +58,17 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 
 | Method | Endpoint | Auth | Keterangan |
 |--------|----------|------|------------|
-| POST | /api/auth/login | Public | Login admin |
+| POST | /api/auth/login | Public | Login admin (set cookie session) |
+| GET | /api/auth/me | Cookie | Cek session valid |
+| POST | /api/auth/refresh | Cookie | Refresh token |
+| POST | /api/auth/logout | Cookie | Logout & hapus session |
 | GET | /api/portfolio | Public | List semua portfolio |
 | GET | /api/portfolio/:id | Public | Detail portfolio |
-| POST | /api/portfolio | JWT | Tambah portfolio |
-| PUT | /api/portfolio/:id | JWT | Update portfolio |
-| DELETE | /api/portfolio/:id | JWT | Hapus portfolio |
-| POST | /api/portfolio/upload-image | JWT | Upload gambar ke Supabase Storage (multipart) |
-| DELETE | /api/portfolio/:id/image | JWT | Hapus gambar dari storage & null-kan URL |
+| POST | /api/portfolio | Session | Tambah portfolio |
+| PUT | /api/portfolio/:id | Session | Update portfolio |
+| DELETE | /api/portfolio/:id | Session | Hapus portfolio |
+| POST | /api/portfolio/upload-image | Session | Upload gambar ke Supabase Storage (multipart) |
+| DELETE | /api/portfolio/:id/image | Session | Hapus gambar dari storage & null-kan URL |
 
 Response format: `{ success: boolean, data: any, message: string }`
 
@@ -89,7 +91,7 @@ npm run dev     # http://localhost:5173
 ### 2. Setup Supabase Database
 
 1. **Buat project** di https://supabase.com
-2. **SQL Editor** → buka `backend/supabase-setup.sql`, jalankan semua query untuk membuat tabel `portfolio` dan `admin_users`
+2. **SQL Editor** → buka `backend/supabase-setup.sql`, jalankan semua query untuk membuat tabel `portfolio`, `admin_users`, dan `admin_sessions`
 3. **Project Settings → API** — catet `Project URL` (SUPABASE_URL) dan `anon public` key (SUPABASE_ANON_KEY)
 4. **Setup Storage** — Buat bucket `project-images` untuk upload gambar:
 
@@ -211,7 +213,7 @@ Menggunakan Web Crypto API (PBKDF2) - kompatibel dengan Cloudflare Workers:
 
 1. **Jangan commit** file `.env`, `.dev.vars`, atau `wrangler.toml` yang sudah terisi secret ke repository publik
 2. Gunakan `wrangler secret put` untuk production secrets
-3. JWT token disimpan di `localStorage` - pertimbangkan httpOnly cookie untuk production yang lebih aman
+3. Session token disimpan di **HTTP-only cookie** (aman dari XSS)
 4. Ganti password default admin segera setelah setup
 
 ## Commands Reference
