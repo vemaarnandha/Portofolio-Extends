@@ -10,9 +10,9 @@ const skills = [
 ];
 
 const experiences = [
-  { title: "Fullstack Developer", company: "Freelance", period: "2023 - Sekarang", desc: "Membangun berbagai aplikasi web..." },
-  { title: "Frontend Developer", company: "Tech Startup", period: "2021 - 2023", desc: "Mengembangkan UI/UX untuk produk SaaS..." },
-  { title: "Junior Web Developer", company: "Digital Agency", period: "2019 - 2021", desc: "Membuat website responsif dan landing page..." },
+  { title: "Reseller BGL CPS", company: "Freelance", period: "2021 - 2022", desc: "Menyediakan mata uang game, item farming, account, jasa midman." },
+  { title: "Reseller Account", company: "Freelance ", period: "2022 - 2023", desc: "Membeli akun game khusunya game The Legends of Neverland dengan lalu menjualnya kembbali." },
+  { title: "Insert data", company: "Freelance", period: "2025 - 2025", desc: "Memindahkan catatan pembayaran, yang sebelumnya manual(tulis kertas), ke dalam bentuk digital." },
 ];
 
 export default function About() {
@@ -33,9 +33,9 @@ export default function About() {
               Profil
             </h2>
             <div className="space-y-3 text-arcane-300/70 font-body leading-relaxed">
-              <p>Saya adalah seorang fullstack developer dengan pengalaman lebih dari 5 tahun...</p>
+              <p>Saya adalah seorang fullstack developer dengan pengalaman lebih 1,5 Tahun...</p>
               <p>Spesialisasi saya berada pada ekosistem React dan TypeScript...</p>
-              <p>Ketika tidak sedang coding, saya menulis blog teknologi...</p>
+              <p>Ketika tidak sedang coding, saya memabaca manga, lightnovel...</p>
             </div>
           </div>
         </section>

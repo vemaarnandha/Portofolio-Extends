@@ -148,50 +148,358 @@ npm run dev      # http://localhost:8787
 
 ## Deployment
 
-### Frontend → Vercel
+> **Urutan deploy:** Supabase → Backend (Workers) → Frontend (Vercel).
+> Jangan terbalik, karena frontend butuh URL backend.
+
+---
+
+### A. Persiapan Akun & Tools
+
+Sebelum mulai, pastikan kamu sudah punya:
+
+| Platform | Keperluan | Daftar |
+|----------|-----------|--------|
+| **Supabase** | Database + Storage + Auth | https://supabase.com (bisa pakai GitHub) |
+| **Cloudflare** | Backend hosting (Workers) | https://dash.cloudflare.com (bisa pakai GitHub) |
+| **Vercel** | Frontend hosting | https://vercel.com (bisa pakai GitHub) |
+
+**Tools yang harus terinstall di komputer:**
 
 ```bash
-cd app
-npm run build
+# Cek dulu
+node --version   # minimal v18
+npm --version    # minimal v9
 
-# Deploy ke Vercel
-npx vercel --prod
+# Pastikan Wrangler (CLI Cloudflare) sudah terinstall
+npx wrangler --version
 
-# Atau push ke GitHub, lalu connect repository di dashboard Vercel
+# Pastikan Vercel CLI sudah terinstall
+npx vercel --version
 ```
 
-**Environment Variables di Vercel:**
-- `VITE_API_URL` = URL Cloudflare Workers Anda
+Jika belum ada:
 
-### Backend → Cloudflare Workers
+```bash
+npm install -g wrangler vercel
+```
+
+---
+
+### B. Setup Supabase
+
+#### B1. Buat Project
+
+1. Buka https://supabase.com → **Sign in** (pakai GitHub)
+2. Klik **New project**
+3. Isi:
+   - **Name:** `portfolio` (atau bebas)
+   - **Database Password:** buat password kuat — **simpan!**
+   - **Region:** pilih yang terdekat (Singapore atau Tokyo)
+4. Tunggu ~2 menit sampai provisioning selesai
+
+#### B2. Dapatkan Credentials
+
+1. Di dashboard Supabase, buka **Project Settings → API**
+2. Cari dan catat 3 nilai ini:
+
+| Nama | Letak | Contoh |
+|------|-------|--------|
+| `SUPABASE_URL` | **Project URL** | `https://xxx.supabase.co` |
+| `SUPABASE_ANON_KEY` | **anon public** | `eyJhbGciOiJ...` |
+| `SUPABASE_SERVICE_ROLE` | **service_role** (scroll ke bawah) | `eyJhbGciOiJ...` |
+
+> **⚠️ Peringatan:** `service_role` punya akses penuh ke database. Jangan pernah diekspos ke frontend atau di-commit ke GitHub.
+
+#### B3. Jalankan SQL Setup
+
+1. Buka **SQL Editor** di sidebar kiri
+2. Klik **New query**
+3. Buka file `backend/supabase-setup.sql` — **copy semua isinya**
+4. Paste ke SQL Editor
+5. Klik **Run** (atau `Ctrl+Enter`)
+6. Pastikan tidak ada error. Akan membuat 3 tabel:
+   - `portfolio` — menyimpan data portfolio
+   - `admin_users` — menyimpan admin login
+   - `admin_sessions` — menyimpan session login
+
+#### B4. Buat Bucket Storage
+
+**Cara 1 — Via Dashboard (mudah):**
+
+1. Klik **Storage** di sidebar kiri
+2. Klik **New bucket**
+3. Isi:
+   - **Name:** `project-images`
+   - **Public bucket:** ✅ ceklis
+4. Klik **Create bucket**
+5. Setelah jadi, klik bucket → **Policies** → **New Policy**
+6. Buat 2 policy:
+
+| Policy | Type | Operation |
+|--------|------|-----------|
+| Public read | SELECT | `bucket_id = 'project-images'` |
+| Authenticated upload | INSERT | `bucket_id = 'project-images' AND auth.role() = 'authenticated'` |
+
+**Cara 2 — Via SQL Editor:**
+
+Jalankan query ini:
+
+```sql
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('project-images', 'project-images', true);
+
+CREATE POLICY "Allow public read"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'project-images');
+
+CREATE POLICY "Allow authenticated upload"
+ON storage.objects FOR INSERT
+WITH CHECK (
+  bucket_id = 'project-images' AND
+  auth.role() = 'authenticated'
+);
+```
+
+#### B5. Buat Admin User
+
+```bash
+cd backend
+npm install
+npm run gen-hash admin123
+```
+
+Akan keluar output seperti:
+
+```
+Hash: a1b2c3d4e5f6...:f1e2d3c4b5a6...
+```
+
+Copy hash tersebut, lalu jalankan di Supabase SQL Editor:
+
+```sql
+INSERT INTO admin_users (email, password_hash)
+VALUES ('admin@portfolio.com', 'hash-disini');
+```
+
+---
+
+### C. Deploy Backend ke Cloudflare Workers
+
+#### C1. Login ke Cloudflare
 
 ```bash
 cd backend
 
-# Set secrets (one-time)
-npx wrangler secret put JWT_SECRET
-npx wrangler secret put SUPABASE_URL
-npx wrangler secret put SUPABASE_ANON_KEY
-npx wrangler secret put SUPABASE_SERVICE_ROLE
-
-# Update CORS origin di wrangler.toml
-# [vars]
-# CORS_ORIGIN = "https://your-vercel-app.vercel.app"
-
-# Deploy
-npm run deploy
+# Login via browser
+npx wrangler login
 ```
 
-### Update CORS
+Akan terbuka browser → klik **Allow** → kembali ke terminal.
 
-Setelah deploy frontend, update `CORS_ORIGIN` di `wrangler.toml`:
+#### C2. Set Secrets (sekali saja)
+
+```bash
+npx wrangler secret put JWT_SECRET
+# ➜ Ketik: minimal 32 karakter, bebas. Contoh: my-super-secret-key-min-32-characters!!
+
+npx wrangler secret put SUPABASE_URL
+# ➜ Paste: https://xxx.supabase.co (dari step B2)
+
+npx wrangler secret put SUPABASE_ANON_KEY
+# ➜ Paste: eyJhbGciOiJ... (anon key dari step B2)
+
+npx wrangler secret put SUPABASE_SERVICE_ROLE
+# ➜ Paste: eyJhbGciOiJ... (service_role dari step B2)
+```
+
+> **Catatan:** Secrets terenkripsi dan tidak bisa dibaca setelah disimpan. Simpan di password manager.
+
+#### C3. Update CORS di wrangler.toml
+
+Buka `backend/wrangler.toml`, ubah:
 
 ```toml
 [vars]
-CORS_ORIGIN = "https://portfolio-yourname.vercel.app"
+CORS_ORIGIN = "https://namaproject.vercel.app"
+# Ganti https://namaproject.vercel.app dengan domain Vercel-mu nanti
+# Bisa diisi sementara dulu, nanti di-update lagi setelah frontend deploy
 ```
 
-Lalu re-deploy backend.
+#### C4. Deploy
+
+```bash
+npm run deploy
+```
+
+Tunggu ~30 detik. Output akan seperti:
+
+```
+➜ Uploading...
+➜ Published: https://portfolio-backend.xxx.workers.dev
+```
+
+**Catat URL ini!** Contoh: `https://portfolio-backend.your-name.workers.dev`
+
+#### C5. Test Backend
+
+Buka browser, akses URL backend:
+
+```
+https://portfolio-backend.your-name.workers.dev/
+```
+
+Harus muncul:
+
+```json
+{ "success": true, "data": null, "message": "Portfolio API is running" }
+```
+
+Test endpoint portfolio:
+
+```
+https://portfolio-backend.your-name.workers.dev/api/portfolio
+```
+
+Harus muncul:
+
+```json
+{ "success": true, "data": [], "message": "Data portfolio berhasil diambil" }
+```
+
+---
+
+### D. Deploy Frontend ke Vercel
+
+Kamu punya 2 opsi:
+
+#### Opsi 1 — Via Vercel CLI (cepat, langsung dari terminal)
+
+```bash
+cd app
+
+# Build dulu untuk test
+npm run build
+
+# Deploy
+npx vercel --prod
+```
+
+Saat ditanya:
+
+| Prompt | Jawab |
+|--------|-------|
+| Set up and deploy? | `Y` |
+| Which scope? | Pilih akun Vercel kamu |
+| Link to existing project? | `N` |
+| Project name? | Enter saja (default) |
+| Directory? | Enter saja (./) |
+| Override settings? | `N` |
+
+Setelah deploy selesai, **set environment variable**:
+
+```bash
+npx vercel env add VITE_API_URL production
+# ➜ Paste: https://portfolio-backend.your-name.workers.dev
+```
+
+Lalu re-deploy:
+
+```bash
+npx vercel --prod
+```
+
+#### Opsi 2 — Via GitHub (auto-deploy)
+
+1. Push project ke GitHub:
+
+```bash
+git add .
+git commit -m "initial commit"
+git remote add origin https://github.com/username/portfolio.git
+git push -u origin main
+```
+
+2. Buka https://vercel.com → **Add New Project**
+3. Import repository GitHub kamu
+4. **Build Settings** — biarkan default (Vite auto-detected)
+5. **Environment Variables:**
+
+| Variable | Value |
+|----------|-------|
+| `VITE_API_URL` | `https://portfolio-backend.your-name.workers.dev` |
+
+6. Klik **Deploy**
+7. Tunggu ~2 menit
+
+#### D1. Test Frontend
+
+Buka URL Vercel:
+
+```
+https://namaproject.vercel.app
+```
+
+Coba:
+- ✅ Halaman Home, Projects, About, Contact tampil
+- ✅ Buka `/admin/login` → login dengan `admin@portfolio.com` / `admin123`
+- ✅ Redirect ke Dashboard
+- ✅ Bisa Tambah/Edit/Hapus portfolio + upload gambar
+
+---
+
+### E. Finalisasi CORS
+
+Setelah frontend live, update **CORS origin** di backend:
+
+Buka `backend/wrangler.toml`:
+
+```toml
+[vars]
+CORS_ORIGIN = "https://namaproject.vercel.app"
+# Ganti dengan domain Vercel aslimu
+```
+
+Re-deploy backend:
+
+```bash
+cd backend
+npm run deploy
+```
+
+---
+
+### F. Troubleshooting
+
+| Masalah | Penyebab | Solusi |
+|---------|----------|--------|
+| `ServiceError: 10007` | Secrets belum diset | Jalankan `npx wrangler secret put ...` |
+| Login gagal | Admin user belum dibuat | Jalankan INSERT di Supabase SQL Editor |
+| Upload gambar error 500 | Bucket `project-images` belum dibuat | Buat bucket di Supabase Storage |
+| Gambar tidak muncul | Storage policy belum di-set | Tambah policy SELECT untuk public |
+| CORS error di browser | `CORS_ORIGIN` di wrangler.toml salah | Update dengan domain Vercel yang benar, re-deploy |
+| Halaman kosong putih | `VITE_API_URL` salah atau backend down | Cek URL backend, test langsung di browser |
+| Cookie tidak tersimpan | Frontend & backend beda domain | Pastikan `credentials: include` dan CORS benar |
+
+---
+
+### G. Maintenance
+
+```bash
+# Update backend
+cd backend
+npm run deploy
+
+# Update frontend (via Vercel CLI)
+cd app
+npm run build
+npx vercel --prod
+
+# Lihat logs backend
+npx wrangler tail
+
+# Lihat logs di Supabase
+# Dashboard → Database → Logs
+```
 
 ## Default Credentials
 

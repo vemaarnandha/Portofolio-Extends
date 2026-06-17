@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Menu, X, Code2 } from "lucide-react";
+import { Menu, X, ScrollText } from "lucide-react";
 import { isAuthenticated } from "@/lib/auth";
 
 const navLinks = [
@@ -23,8 +23,8 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 border-b border-arcane-900/50 bg-void-950/95 backdrop-blur supports-[backdrop-filter]:bg-void-950/60">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-2 text-xl font-heading font-bold text-arcane-500">
-          <Code2 className="h-6 w-6 text-arcane-500" />
-          <span>MyPortfolio</span>
+          <ScrollText className="h-6 w-6 text-arcane-500" />
+          <span>ExFolio</span>
         </Link>
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
