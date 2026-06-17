@@ -4,8 +4,9 @@ compatibility_date = "2024-10-22"
 
 # Environment Variables
 [vars]
-CORS_ORIGIN = "https://your-vercel-domain.vercel.app"
-
+CORS_ORIGIN = "https://namaproject.vercel.app"
+# Ganti https://namaproject.vercel.app dengan domain Vercel-mu nanti
+# Bisa diisi sementara dulu, nanti di-update lagi setelah frontend deploy
 # Secrets (use `wrangler secret put` to set these)
 # wrangler secret put JWT_SECRET
 # wrangler secret put SUPABASE_URL
