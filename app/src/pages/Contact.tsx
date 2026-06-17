@@ -38,7 +38,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h3 className="font-heading font-medium text-sm tracking-[0.02em] text-arcane-300 mb-1">Email</h3>
-                  <p className="text-sm text-arcane-300/60 font-body">email@example.com</p>
+                  <p className="text-sm text-arcane-300/60 font-body">kologes4@gmail.com.com</p>
                 </div>
               </div>
             </div>
@@ -49,7 +49,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h3 className="font-heading font-medium text-sm tracking-[0.02em] text-arcane-300 mb-1">Telepon</h3>
-                  <p className="text-sm text-arcane-300/60 font-body">+62 812-3456-7890</p>
+                  <p className="text-sm text-arcane-300/60 font-body">+62 819-1663-5780</p>
                 </div>
               </div>
             </div>
@@ -60,7 +60,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h3 className="font-heading font-medium text-sm tracking-[0.02em] text-arcane-300 mb-1">Lokasi</h3>
-                  <p className="text-sm text-arcane-300/60 font-body">Jakarta, Indonesia</p>
+                  <p className="text-sm text-arcane-300/60 font-body">Blitar, Jatim, Indonesia</p>
                 </div>
               </div>
             </div>

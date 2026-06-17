@@ -30,10 +30,15 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <Link
               key={link.path} to={link.path}
-              className={`text-sm font-medium font-heading tracking-wider transition-colors duration-200 hover:text-arcane-400 ${
+              className={`group relative text-sm font-medium font-heading tracking-wider transition-all duration-200 hover:text-arcane-400 ${
                 location.pathname === link.path ? "text-arcane-500" : "text-arcane-300/70"
               }`}
-            >{link.label}</Link>
+            >
+              {link.label}
+              <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-arcane-500 to-rift-500 transition-all duration-300 max-md:hidden md:group-hover:w-full ${
+                location.pathname === link.path ? "md:w-full" : "w-0"
+              }`} />
+            </Link>
           ))}
           <Link
             to={loggedIn ? "/admin/dashboard" : "/admin/login"}
@@ -51,12 +56,14 @@ export default function Navbar() {
         </button>
       </div>
       {mobileOpen && (
-        <div className="md:hidden border-t border-arcane-900/50 bg-void-950 px-4 py-4 space-y-3">
+        <div className="md:hidden border-t border-arcane-900/50 bg-void-950 px-4 py-4 space-y-1">
           {navLinks.map((link) => (
             <Link
               key={link.path} to={link.path} onClick={() => setMobileOpen(false)}
-              className={`block text-sm font-heading tracking-wider transition-colors duration-200 hover:text-arcane-400 ${
-                location.pathname === link.path ? "text-arcane-500" : "text-arcane-300/70"
+              className={`block rounded-md px-3 py-2 text-sm font-heading tracking-wider transition-all duration-200 active:scale-[0.97] ${
+                location.pathname === link.path
+                  ? "bg-arcane-500/10 text-arcane-500"
+                  : "text-arcane-300/70 hover:bg-arcane-900/30 hover:text-arcane-400"
               }`}
             >{link.label}</Link>
           ))}
