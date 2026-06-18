@@ -30,7 +30,7 @@ cd backend && npm run gen-hash # generate PBKDF2 hash for admin password
 - **Path alias:** `@/` → `app/src/` (configured in vite.config.ts + tsconfig.app.json)
 - **shadcn/ui:** new-york style, CSS variables, lucide icons
 - **Routing:** react-router v7 with BrowserRouter
-- **Auth:** HTTP-only cookie session (JWT via `jose`), backend validates, no token stored in JS
+- **Auth:** JWT via `jose`, tokens returned in response body + stored in `localStorage`, sent as `Authorization: Bearer` header. Cookies also set as same-origin fallback. Cross-origin cookies don't work between Vercel ↔ Workers domains.
 - **Response format:** `{ success: boolean, data: any, message: string }`
 - **Spam Protection:** Honeypot field in Contact form
 

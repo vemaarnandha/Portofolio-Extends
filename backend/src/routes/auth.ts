@@ -61,7 +61,7 @@ auth.post("/login", async (c) => {
 
     return c.json({
       success: true,
-      data: { user: { id: user.id, email: user.email } },
+      data: { user: { id: user.id, email: user.email }, token, refreshToken },
       message: "Login berhasil",
     });
   } catch (error) {
@@ -123,7 +123,7 @@ auth.post("/refresh", async (c) => {
 
     return c.json({
       success: true,
-      data: { user: { id: user.id, email: user.email } },
+      data: { user: { id: user.id, email: user.email }, token, refreshToken: newRefreshToken },
       message: "Token berhasil diperbarui",
     });
   } catch (error) {

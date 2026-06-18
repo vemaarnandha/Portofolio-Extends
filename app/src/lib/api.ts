@@ -1,6 +1,12 @@
 import type { ApiResponse, Portfolio, LoginResponse, UploadResponse, ContactMessage } from "@/types";
+import { getStoredToken } from "@/lib/auth";
 
 export const API_BASE_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+
+function authHeaders(): Record<string, string> {
+  const token = getStoredToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
 
 async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
   if (!response.ok) {
@@ -14,9 +20,10 @@ function fetchOpts(method: string, body?: Record<string, unknown>): RequestInit 
   const opts: RequestInit = {
     method,
     credentials: "include" as RequestCredentials,
+    headers: authHeaders(),
   };
   if (body) {
-    opts.headers = { "Content-Type": "application/json" };
+    (opts.headers as Record<string, string>)["Content-Type"] = "application/json";
     opts.body = JSON.stringify(body);
   }
   return opts;
@@ -35,6 +42,7 @@ export async function login(email: string, password: string): Promise<ApiRespons
 export async function getPortfolios(): Promise<ApiResponse<Portfolio[]>> {
   const response = await fetch(`${API_BASE_URL}/api/portfolio`, {
     credentials: "include",
+    headers: authHeaders(),
   });
   return handleResponse<Portfolio[]>(response);
 }
@@ -42,6 +50,7 @@ export async function getPortfolios(): Promise<ApiResponse<Portfolio[]>> {
 export async function getPortfolioById(id: number): Promise<ApiResponse<Portfolio>> {
   const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, {
     credentials: "include",
+    headers: authHeaders(),
   });
   return handleResponse<Portfolio>(response);
 }
@@ -73,6 +82,7 @@ export async function deletePortfolio(id: number): Promise<ApiResponse<Portfolio
   const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, {
     method: "DELETE",
     credentials: "include",
+    headers: authHeaders(),
   });
   return handleResponse<Portfolio>(response);
 }
@@ -88,6 +98,7 @@ export async function uploadProjectImage(
   const response = await fetch(`${API_BASE_URL}/api/portfolio/upload-image`, {
     method: "POST",
     credentials: "include",
+    headers: authHeaders(),
     body: formData,
   });
 
@@ -100,6 +111,7 @@ export async function deleteProjectImage(projectId: number): Promise<UploadRespo
     {
       method: "DELETE",
       credentials: "include",
+      headers: authHeaders(),
     }
   );
 
@@ -120,6 +132,7 @@ export async function sendContactMessage(data: {
 export async function getContactMessages(): Promise<ApiResponse<ContactMessage[]>> {
   const response = await fetch(`${API_BASE_URL}/api/contact`, {
     credentials: "include",
+    headers: authHeaders(),
   });
   return handleResponse<ContactMessage[]>(response);
 }
@@ -128,6 +141,7 @@ export async function markMessageAsRead(id: number): Promise<ApiResponse<null>> 
   const response = await fetch(`${API_BASE_URL}/api/contact/read/${id}`, {
     method: "PUT",
     credentials: "include",
+    headers: authHeaders(),
   });
   return handleResponse<null>(response);
 }
@@ -136,6 +150,7 @@ export async function markAllMessagesAsRead(): Promise<ApiResponse<null>> {
   const response = await fetch(`${API_BASE_URL}/api/contact/read-all`, {
     method: "PUT",
     credentials: "include",
+    headers: authHeaders(),
   });
   return handleResponse<null>(response);
 }
@@ -144,6 +159,7 @@ export async function deleteContactMessage(id: number): Promise<ApiResponse<null
   const response = await fetch(`${API_BASE_URL}/api/contact/${id}`, {
     method: "DELETE",
     credentials: "include",
+    headers: authHeaders(),
   });
   return handleResponse<null>(response);
 }

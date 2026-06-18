@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/lib/api";
+import { storeTokens } from "@/lib/auth";
 import { LogIn, Loader2, AlertCircle, ArrowLeft, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -18,6 +19,9 @@ export default function AdminLogin() {
     try {
       const response = await login(email, password);
       if (response.success) {
+        if (response.data.token && response.data.refreshToken) {
+          storeTokens(response.data.token, response.data.refreshToken);
+        }
         navigate("/admin/dashboard");
       } else { setError(response.message || "Login gagal"); }
     } catch (err) { setError(err instanceof Error ? err.message : "Terjadi kesalahan saat login"); }

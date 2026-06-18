@@ -16,8 +16,8 @@ async function setAuthCookies(c: any, userId: number, email: string) {
   const token = await createToken({ userId, email }, c.env.JWT_SECRET, JWT_EXPIRY);
   setCookie(c, "token", token, {
     httpOnly: true,
-    sameSite: "Lax",
-    secure: false,
+    sameSite: "None",
+    secure: true,
     path: "/",
     maxAge: 15 * 60,
   });
@@ -25,7 +25,7 @@ async function setAuthCookies(c: any, userId: number, email: string) {
 
 export async function authMiddleware(c: any, next: any) {
   try {
-    const token = getCookie(c, "token");
+    const token = getCookie(c, "token") || c.req.header("Authorization")?.replace("Bearer ", "");
     if (token) {
       const payload = await verifyToken<AuthUser>(token, c.env.JWT_SECRET);
       if (payload) {
@@ -74,15 +74,15 @@ export async function authMiddleware(c: any, next: any) {
     const newToken = await createToken({ userId: user.id, email: user.email }, c.env.JWT_SECRET, JWT_EXPIRY);
     setCookie(c, "token", newToken, {
       httpOnly: true,
-      sameSite: "Lax",
-      secure: false,
+      sameSite: "None",
+      secure: true,
       path: "/",
       maxAge: 15 * 60,
     });
     setCookie(c, "refresh_token", newRefreshToken, {
       httpOnly: true,
-      sameSite: "Lax",
-      secure: false,
+      sameSite: "None",
+      secure: true,
       path: "/",
       maxAge: 7 * 24 * 60 * 60,
     });
