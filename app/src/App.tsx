@@ -7,6 +7,7 @@ import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
+import AdminMessages from "@/pages/AdminMessages";
 import PortfolioForm from "@/pages/PortfolioForm";
 
 function Layout() {
@@ -18,6 +19,7 @@ function Layout() {
       <Routes>
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/messages" element={<AdminMessages />} />
         <Route path="/admin/portfolio/new" element={<PortfolioForm />} />
         <Route path="/admin/portfolio/:id/edit" element={<PortfolioForm />} />
       </Routes>

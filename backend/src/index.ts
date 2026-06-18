@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import auth from "./routes/auth";
 import portfolioRoutes from "./routes/portfolio";
+import contactRoutes from "./routes/contact";
 import type { Env } from "./types/env";
 
 const app = new Hono<{ Bindings: Env }>();
@@ -25,6 +26,7 @@ app.get("/", (c) => {
 // Routes
 app.route("/api/auth", auth);
 app.route("/api/portfolio", portfolioRoutes);
+app.route("/api/contact", contactRoutes);
 
 // 404 handler
 app.notFound((c) => {

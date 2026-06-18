@@ -1,7 +1,10 @@
 # 🜏 Frontend Skills & Design System — Dark Fantasy Purple Edition
 
-> **Tech Stack:** React 19 · TypeScript · Vite · Tailwind CSS · shadcn/ui
-> **Aesthetic:** Purple Elegant · Dark Fantasy · Arcane UI
+## UI/UX Modernization
+- **Design System:** Upgraded to "Arcane UI" featuring glassmorphism, bento grid layouts, and premium dark fantasy aesthetics.
+- **Animations:** Integrated `framer-motion` and custom Tailwind keyframes (`fade-from-abyss`, `rift-border`, `glow-pulse`).
+- **Backgrounds:** Implemented dynamic mesh gradient backgrounds and noise texture overlays for a premium feel.
+- **Performance:** Refined component structure for better Core Web Vitals.
 
 ---
 

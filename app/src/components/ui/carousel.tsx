@@ -91,16 +91,21 @@ function Carousel({
     setApi(api)
   }, [api, setApi])
 
+  const onSelectRef = React.useRef(onSelect)
+  React.useEffect(() => {
+    onSelectRef.current = onSelect
+  })
+
   React.useEffect(() => {
     if (!api) return
-    onSelect(api)
-    api.on("reInit", onSelect)
-    api.on("select", onSelect)
+    onSelectRef.current(api)
+    api.on("reInit", () => onSelectRef.current(api))
+    api.on("select", () => onSelectRef.current(api))
 
     return () => {
-      api?.off("select", onSelect)
+      api?.off("select", () => onSelectRef.current(api))
     }
-  }, [api, onSelect])
+  }, [api])
 
   return (
     <CarouselContext.Provider

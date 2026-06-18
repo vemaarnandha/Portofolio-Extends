@@ -4,4 +4,5 @@ export interface Env {
   SUPABASE_SERVICE_ROLE: string;
   JWT_SECRET: string;
   CORS_ORIGIN: string;
+  DISCORD_WEBHOOK_URL: string;
 }

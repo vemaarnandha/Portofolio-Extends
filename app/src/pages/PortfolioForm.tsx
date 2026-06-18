@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createPortfolio, updatePortfolio, getPortfolioById, uploadProjectImage } from "@/lib/api";
 import { isAuthenticated } from "@/lib/auth";
-import { Loader2, AlertCircle, ArrowLeft, Save } from "lucide-react";
+import { Loader2, AlertCircle, ArrowLeft, Save, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import ImageUploadField from "@/components/ui/image-upload";
 
@@ -143,112 +143,90 @@ export default function PortfolioForm() {
   }
 
   return (
-    <div className="min-h-screen py-8 animate-fade-from-abyss">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-24 relative overflow-hidden">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 relative z-10">
         <Link
           to="/admin/dashboard"
-          className="inline-flex items-center gap-2 text-sm text-arcane-400 hover:text-arcane-300 transition-colors mb-6 font-heading tracking-wider"
+          className="inline-flex items-center gap-2 text-[10px] font-heading tracking-[0.2em] text-arcane-500 hover:text-arcane-300 transition-colors mb-8 uppercase"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Kembali ke Dashboard
+          <ArrowLeft className="h-3 w-3" /> Kembali ke Dashboard
         </Link>
 
-        <h1 className="font-heading text-2xl font-bold tracking-[0.05em] text-arcane-500 mb-2">
-          {isEdit ? "Edit Portfolio" : "Tambah Portfolio"}
-        </h1>
-        <p className="text-sm text-arcane-300/60 font-body mb-8">
-          {isEdit
-            ? "Perbarui informasi portfolio yang sudah ada."
-            : "Isi form di bawah untuk menambahkan portfolio baru."}
-        </p>
+        <div className="mb-10 animate-fade-from-abyss">
+          <div className="inline-flex items-center gap-2 rounded-full bg-arcane-500/10 px-4 py-1.5 text-[10px] font-heading tracking-[0.3em] text-arcane-400 mb-6 uppercase border border-arcane-500/20">
+            <Sparkles className="h-3 w-3" /> Management
+          </div>
+          <h1 className="font-heading text-4xl font-bold tracking-tight text-arcane-100">
+            {isEdit ? "Edit Manifest" : "New Manifest"}
+          </h1>
+        </div>
 
-        <div className="rounded-xl border border-arcane-900/50 bg-void-900 p-6 shadow-md">
-          <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="glass-card p-8 sm:p-10 rounded-3xl animate-fade-from-abyss [animation-delay:100ms]">
+          <form onSubmit={handleSubmit} className="space-y-8">
             {error && (
-              <div className="flex items-center gap-2 rounded-lg border border-blood-500/20 bg-blood-500/10 p-3 text-sm text-blood-500">
-                <AlertCircle className="h-4 w-4 flex-shrink-0" />
+              <div className="flex items-center gap-3 rounded-xl border border-blood-500/20 bg-blood-500/5 p-4 text-sm text-blood-400">
+                <AlertCircle className="h-5 w-5 flex-shrink-0" />
                 {error}
               </div>
             )}
 
             <div className="space-y-2">
-              <label htmlFor="nama_project" className="text-sm font-heading tracking-wider text-arcane-300">
-                Nama Project <span className="text-blood-500">*</span>
-              </label>
+              <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Project Name</label>
               <input
-                id="nama_project"
-                name="nama_project"
-                type="text"
-                value={form.nama_project}
-                onChange={handleChange}
-                className="w-full rounded-md border border-arcane-900 bg-void-950 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
-                placeholder="Website E-Commerce"
-              />
-            </div>
-
-            <ImageUploadField
-              value={imagePreview}
-              onChange={handleImageChange}
-            />
-
-            <div className="space-y-2">
-              <label htmlFor="jobdesk" className="text-sm font-heading tracking-wider text-arcane-300">
-                Jobdesk / Role <span className="text-blood-500">*</span>
-              </label>
-              <input
-                id="jobdesk"
-                name="jobdesk"
-                type="text"
-                value={form.jobdesk}
-                onChange={handleChange}
-                className="w-full rounded-md border border-arcane-900 bg-void-950 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
-                placeholder="Fullstack Developer"
+                name="nama_project" type="text" value={form.nama_project} onChange={handleChange}
+                className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all"
+                placeholder="Ex: Enchanted Portfolio"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="deskripsi" className="text-sm font-heading tracking-wider text-arcane-300">
-                Deskripsi <span className="text-blood-500">*</span>
-              </label>
+              <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Artifact Image</label>
+              <div className="glass-card p-4 rounded-xl border-dashed">
+                <ImageUploadField
+                  value={imagePreview}
+                  onChange={handleImageChange}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Role</label>
+              <input
+                name="jobdesk" type="text" value={form.jobdesk} onChange={handleChange}
+                className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all"
+                placeholder="Ex: Fullstack Developer"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Description</label>
               <textarea
-                id="deskripsi"
-                name="deskripsi"
-                rows={5}
-                value={form.deskripsi}
-                onChange={handleChange}
-                className="w-full rounded-md border border-arcane-900 bg-void-950 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200 resize-none"
-                placeholder="Jelaskan project ini secara detail..."
+                name="deskripsi" rows={6} value={form.deskripsi} onChange={handleChange}
+                className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all resize-none"
+                placeholder="Detail the artifact..."
               />
             </div>
 
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-4 pt-4">
               <button
-                type="submit"
-                disabled={loading}
-                className="inline-flex items-center gap-2 rounded-lg bg-arcane-500 px-6 py-2.5 text-sm font-heading tracking-wider font-semibold text-void-950 hover:bg-arcane-400 hover:shadow-glow active:scale-[0.97] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                type="submit" disabled={loading}
+                className="inline-flex items-center justify-center gap-3 rounded-xl bg-arcane-500 px-8 py-4 text-xs font-heading font-bold tracking-[0.2em] text-void-950 hover:bg-arcane-400 hover:shadow-arcane transition-all duration-300 disabled:opacity-50 active:scale-95 uppercase"
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Menyimpan...
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4" />
-                    {isEdit ? "Update Portfolio" : "Simpan Portfolio"}
-                  </>
-                )}
+                {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> SAVING...</> : <><Save className="h-4 w-4" /> COMMIT MANIFEST</>}
               </button>
               <Link
                 to="/admin/dashboard"
-                className="inline-flex items-center gap-2 rounded-lg border border-arcane-900/50 px-6 py-2.5 text-sm font-heading tracking-wider text-arcane-300 hover:bg-arcane-900/50 hover:border-arcane-700 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-xl border border-arcane-900/50 px-8 py-4 text-xs font-heading tracking-widest text-arcane-300 hover:bg-arcane-900/30 transition-all uppercase"
               >
-                Batal
+                DISCARD
               </Link>
             </div>
           </form>
         </div>
       </div>
+      
+      {/* Background Orbs */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-enchant-500/5 rounded-full blur-[120px] -z-10" />
     </div>
   );
 }

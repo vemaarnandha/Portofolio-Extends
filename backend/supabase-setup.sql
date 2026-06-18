@@ -39,10 +39,24 @@ CREATE TABLE IF NOT EXISTS admin_sessions (
 CREATE INDEX IF NOT EXISTS idx_admin_sessions_refresh_token ON admin_sessions(refresh_token);
 CREATE INDEX IF NOT EXISTS idx_admin_sessions_user_id ON admin_sessions(user_id);
 
--- 5. NONAKTIFKAN RLS (karena auth dikelola JWT manual di backend)
+-- 5. TABEL CONTACTS
+CREATE TABLE IF NOT EXISTS contacts (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  subject VARCHAR(255),
+  message TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  is_read BOOLEAN DEFAULT FALSE
+);
+
+CREATE INDEX IF NOT EXISTS idx_contacts_created_at ON contacts(created_at);
+
+-- 6. NONAKTIFKAN RLS (karena auth dikelola JWT manual di backend)
 ALTER TABLE portfolio DISABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_users DISABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_sessions DISABLE ROW LEVEL SECURITY;
+ALTER TABLE contacts DISABLE ROW LEVEL SECURITY;
 
 -- ============================================================
 -- SEED DATA (UNCOMMENT setelah tabel dibuat)

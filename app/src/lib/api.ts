@@ -1,4 +1,4 @@
-import type { ApiResponse, Portfolio, LoginResponse, UploadResponse } from "@/types";
+import type { ApiResponse, Portfolio, LoginResponse, UploadResponse, ContactMessage } from "@/types";
 
 export const API_BASE_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
 
@@ -10,7 +10,7 @@ async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
   return response.json();
 }
 
-function fetchOpts(method: string, body?: any): RequestInit {
+function fetchOpts(method: string, body?: Record<string, unknown>): RequestInit {
   const opts: RequestInit = {
     method,
     credentials: "include" as RequestCredentials,
@@ -104,4 +104,46 @@ export async function deleteProjectImage(projectId: number): Promise<UploadRespo
   );
 
   return response.json();
+}
+
+export async function sendContactMessage(data: {
+  name: string;
+  email: string;
+  subject?: string;
+  message: string;
+  honeypot?: string;
+}): Promise<ApiResponse<null>> {
+  const response = await fetch(`${API_BASE_URL}/api/contact`, fetchOpts("POST", data));
+  return handleResponse<null>(response);
+}
+
+export async function getContactMessages(): Promise<ApiResponse<ContactMessage[]>> {
+  const response = await fetch(`${API_BASE_URL}/api/contact`, {
+    credentials: "include",
+  });
+  return handleResponse<ContactMessage[]>(response);
+}
+
+export async function markMessageAsRead(id: number): Promise<ApiResponse<null>> {
+  const response = await fetch(`${API_BASE_URL}/api/contact/read/${id}`, {
+    method: "PUT",
+    credentials: "include",
+  });
+  return handleResponse<null>(response);
+}
+
+export async function markAllMessagesAsRead(): Promise<ApiResponse<null>> {
+  const response = await fetch(`${API_BASE_URL}/api/contact/read-all`, {
+    method: "PUT",
+    credentials: "include",
+  });
+  return handleResponse<null>(response);
+}
+
+export async function deleteContactMessage(id: number): Promise<ApiResponse<null>> {
+  const response = await fetch(`${API_BASE_URL}/api/contact/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  return handleResponse<null>(response);
 }

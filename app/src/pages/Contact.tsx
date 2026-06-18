@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Mail, MapPin, Phone, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { Mail, MapPin, Phone, Send, CheckCircle, AlertCircle, Sparkles } from "lucide-react";
+import { sendContactMessage } from "@/lib/api";
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "", honeypot: "" });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
@@ -13,120 +14,142 @@ export default function Contact() {
       setError("Nama, email, dan pesan wajib diisi."); return;
     }
     setSending(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setSending(false); setSubmitted(true);
-    setForm({ name: "", email: "", subject: "", message: "" });
+    try {
+      const response = await sendContactMessage(form);
+      if (response.success) {
+        setSubmitted(true);
+        setForm({ name: "", email: "", subject: "", message: "", honeypot: "" });
+      } else {
+        setError(response.message || "Gagal mengirim pesan.");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Terjadi kesalahan server");
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
-    <div className="min-h-screen py-12 animate-fade-from-abyss">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="font-heading text-3xl sm:text-[2.25rem] font-bold tracking-[0.05em] text-arcane-500 mb-4">
-            Hubungi Saya
+    <div className="min-h-screen py-24 relative overflow-hidden">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-20 animate-fade-from-abyss">
+          <div className="inline-flex items-center gap-2 rounded-full bg-arcane-500/10 px-4 py-1.5 text-[10px] font-heading tracking-[0.3em] text-arcane-400 mb-6 uppercase border border-arcane-500/20">
+            <Sparkles className="h-3 w-3" /> Connect
+          </div>
+          <h1 className="font-heading text-4xl sm:text-6xl font-bold tracking-tight text-arcane-100 mb-6">
+            Summon the <span className="text-gradient">Architect</span>
           </h1>
-          <p className="text-arcane-300/60 max-w-xl mx-auto font-body">
-            Punya ide project atau ingin berkolaborasi? Jangan ragu untuk menghubungi saya.
+          <p className="text-arcane-300/60 max-w-xl mx-auto font-body text-lg">
+            Punya visi besar atau sekadar ingin bertukar mantera? Gerbang komunikasi selalu terbuka.
           </p>
         </div>
+
         <div className="grid lg:grid-cols-3 gap-8">
-          <div className="space-y-6">
-            <div className="rounded-xl border border-arcane-900/50 bg-card p-6 hover:shadow-lg hover:border-arcane-700 transition-all duration-300">
-              <div className="flex items-start gap-4">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-arcane-500/10 flex-shrink-0">
-                  <Mail className="h-5 w-5 text-arcane-500" />
-                </div>
-                <div>
-                  <h3 className="font-heading font-medium text-sm tracking-[0.02em] text-arcane-300 mb-1">Email</h3>
-                  <p className="text-sm text-arcane-300/60 font-body">kologes4@gmail.com.com</p>
-                </div>
-              </div>
-            </div>
-            <div className="rounded-xl border border-arcane-900/50 bg-card p-6 hover:shadow-lg hover:border-arcane-700 transition-all duration-300">
-              <div className="flex items-start gap-4">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-arcane-500/10 flex-shrink-0">
-                  <Phone className="h-5 w-5 text-arcane-500" />
-                </div>
-                <div>
-                  <h3 className="font-heading font-medium text-sm tracking-[0.02em] text-arcane-300 mb-1">Telepon</h3>
-                  <p className="text-sm text-arcane-300/60 font-body">+62 819-1663-5780</p>
+          {/* Contact Info Bento */}
+          <div className="space-y-4">
+            {[
+              { icon: Mail, label: "Email", value: "kologes4@gmail.com", delay: "0ms" },
+              { icon: Phone, label: "Telepon", value: "+62 819-1663-5780", delay: "100ms" },
+              { icon: MapPin, label: "Lokasi", value: "Blitar, Jatim, Indonesia", delay: "200ms" },
+            ].map((info) => (
+              <div key={info.label} className="glass-card p-6 rounded-2xl animate-fade-from-abyss group hover:-translate-y-1 transition-all duration-300" style={{ animationDelay: info.delay }}>
+                <div className="flex items-center gap-4">
+                  <div className="h-10 w-10 rounded-xl bg-arcane-500/10 flex items-center justify-center text-arcane-400 group-hover:bg-arcane-500 group-hover:text-void-950 transition-all duration-300">
+                    <info.icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-heading text-[10px] tracking-widest text-arcane-500 uppercase">{info.label}</h3>
+                    <p className="text-sm text-arcane-100 font-body mt-1">{info.value}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="rounded-xl border border-arcane-900/50 bg-card p-6 hover:shadow-lg hover:border-arcane-700 transition-all duration-300">
-              <div className="flex items-start gap-4">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-arcane-500/10 flex-shrink-0">
-                  <MapPin className="h-5 w-5 text-arcane-500" />
-                </div>
-                <div>
-                  <h3 className="font-heading font-medium text-sm tracking-[0.02em] text-arcane-300 mb-1">Lokasi</h3>
-                  <p className="text-sm text-arcane-300/60 font-body">Blitar, Jatim, Indonesia</p>
-                </div>
+            ))}
+            
+            {/* Availability Box */}
+            <div className="glass-card p-8 rounded-3xl bg-arcane-500/5 border-arcane-500/20 animate-fade-from-abyss [animation-delay:300ms]">
+              <div className="flex items-center gap-3 mb-4 text-eldritch-400">
+                <div className="h-2 w-2 rounded-full bg-eldritch-500 animate-ping" />
+                <span className="text-[10px] font-mono tracking-widest uppercase">Currently Active</span>
               </div>
+              <p className="text-sm text-arcane-300/60 font-body leading-relaxed">
+                Saya biasanya membalas dalam waktu <span className="text-arcane-100">24 jam</span>. Mari kita bangun sesuatu yang luar biasa.
+              </p>
             </div>
           </div>
+
+          {/* Contact Form Glass Box */}
           <div className="lg:col-span-2">
-            <div className="rounded-xl border border-arcane-900/50 bg-card p-6 sm:p-8 shadow-sm">
+            <div className="glass-card p-8 sm:p-10 rounded-3xl animate-fade-from-abyss [animation-delay:400ms]">
               {submitted ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <CheckCircle className="h-12 w-12 text-eldritch-500 mb-4" />
-                  <h3 className="font-heading text-lg font-semibold tracking-[0.02em] text-arcane-300 mb-2">Pesan Terkirim!</h3>
-                  <p className="text-sm text-arcane-300/60 font-body mb-6">Terima kasih telah menghubungi saya. Saya akan membalas secepat mungkin.</p>
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="h-20 w-20 rounded-full bg-eldritch-500/10 flex items-center justify-center text-eldritch-500 mb-8 border border-eldritch-500/20">
+                    <CheckCircle className="h-10 w-10" />
+                  </div>
+                  <h3 className="font-heading text-3xl font-bold text-arcane-100 mb-4">Ritual Success!</h3>
+                  <p className="text-arcane-300/60 font-body mb-8 max-w-sm">Pesan Anda telah melintasi dimensi dan mendarat di hadapan saya. Tunggu balasan segera.</p>
                   <button
                     onClick={() => setSubmitted(false)}
-                    className="inline-flex items-center gap-2 rounded-lg bg-arcane-500 px-4 py-2 text-sm font-heading tracking-wider text-void-950 hover:bg-arcane-400 hover:shadow-glow transition-all duration-200 active:scale-[0.97]"
+                    className="rounded-xl bg-arcane-500 px-8 py-3 text-xs font-heading font-bold tracking-widest text-void-950 hover:bg-arcane-400 transition-all shadow-glow active:scale-95"
                   >
-                    Kirim Pesan Lain
+                    SEND ANOTHER MANIFESTO
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="hidden">
+                    <input type="text" name="honeypot" value={form.honeypot} onChange={(e) => setForm({ ...form, honeypot: e.target.value })} tabIndex={-1} autoComplete="off" />
+                  </div>
+                  
                   {error && (
-                    <div className="flex items-center gap-2 rounded-lg border border-blood-500/20 bg-blood-500/10 p-3 text-sm text-blood-500">
-                      <AlertCircle className="h-4 w-4 flex-shrink-0" />{error}
+                    <div className="flex items-center gap-3 rounded-xl border border-blood-500/20 bg-blood-500/5 p-4 text-sm text-blood-400 animate-shake">
+                      <AlertCircle className="h-5 w-5 flex-shrink-0" />{error}
                     </div>
                   )}
-                  <div className="grid sm:grid-cols-2 gap-5">
+
+                  <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label htmlFor="name" className="text-sm font-heading tracking-wider text-arcane-300">Nama <span className="text-blood-500">*</span></label>
+                      <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Identity</label>
                       <input
-                        id="name" type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        className="w-full rounded-md border border-arcane-900 bg-void-900 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
-                        placeholder="Nama lengkap"
+                        type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all duration-300"
+                        placeholder="Your name"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="email" className="text-sm font-heading tracking-wider text-arcane-300">Email <span className="text-blood-500">*</span></label>
+                      <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Essence (Email)</label>
                       <input
-                        id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className="w-full rounded-md border border-arcane-900 bg-void-900 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
-                        placeholder="email@example.com"
+                        type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all duration-300"
+                        placeholder="your@email.com"
                       />
                     </div>
                   </div>
+
                   <div className="space-y-2">
-                    <label htmlFor="subject" className="text-sm font-heading tracking-wider text-arcane-300">Subjek</label>
+                    <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Objective</label>
                     <input
-                      id="subject" type="text" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                      className="w-full rounded-md border border-arcane-900 bg-void-900 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
-                      placeholder="Subjek pesan"
+                      type="text" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                      className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all duration-300"
+                      placeholder="What is this about?"
                     />
                   </div>
+
                   <div className="space-y-2">
-                    <label htmlFor="message" className="text-sm font-heading tracking-wider text-arcane-300">Pesan <span className="text-blood-500">*</span></label>
+                    <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Manifesto</label>
                     <textarea
-                      id="message" rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}
-                      className="w-full rounded-md border border-arcane-900 bg-void-900 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200 resize-none"
-                      placeholder="Tulis pesan Anda di sini..."
+                      rows={6} required value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}
+                      className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all duration-300 resize-none"
+                      placeholder="Write your message here..."
                     />
                   </div>
+
                   <button
                     type="submit" disabled={sending}
-                    className="inline-flex items-center gap-2 rounded-lg bg-arcane-500 px-6 py-2.5 text-sm font-heading tracking-wider font-semibold text-void-950 hover:bg-arcane-400 hover:shadow-glow active:scale-[0.97] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-xl bg-arcane-500 px-10 py-4 text-xs font-heading font-bold tracking-[0.2em] text-void-950 hover:bg-arcane-400 hover:shadow-arcane transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed group active:scale-95 uppercase"
                   >
                     {sending ? (
-                      <><div className="h-4 w-4 animate-spin rounded-full border-2 border-void-950/30 border-t-void-950" /> Mengirim...</>
-                    ) : (<><Send className="h-4 w-4" /> Kirim Pesan</>)}
+                      <><div className="h-4 w-4 animate-spin rounded-full border-2 border-void-950/30 border-t-void-950" /> CHANNELING...</>
+                    ) : (<><Send className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /> SUMMON ARCHITECT</>)}
                   </button>
                 </form>
               )}
@@ -134,6 +157,10 @@ export default function Contact() {
           </div>
         </div>
       </div>
+      
+      {/* Background Orbs */}
+      <div className="absolute top-1/3 -right-20 w-[400px] h-[400px] bg-arcane-500/5 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-0 -left-20 w-[400px] h-[400px] bg-enchant-500/5 rounded-full blur-[120px] -z-10" />
     </div>
   );
 }

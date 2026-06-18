@@ -26,18 +26,20 @@ cd backend && npm run gen-hash # generate PBKDF2 hash for admin password
 ## Architecture
 
 - **Frontend entry:** `app/src/main.tsx` (BrowserRouter wrapping App.tsx)
-- **Backend entry:** `backend/src/index.ts` (Hono app, routes mounted at `/api/auth`, `/api/portfolio`)
+- **Backend entry:** `backend/src/index.ts` (Hono app, routes mounted at `/api/auth`, `/api/portfolio`, `/api/contact`)
 - **Path alias:** `@/` → `app/src/` (configured in vite.config.ts + tsconfig.app.json)
 - **shadcn/ui:** new-york style, CSS variables, lucide icons
 - **Routing:** react-router v7 with BrowserRouter
 - **Auth:** HTTP-only cookie session (JWT via `jose`), backend validates, no token stored in JS
 - **Response format:** `{ success: boolean, data: any, message: string }`
+- **Spam Protection:** Honeypot field in Contact form
 
 ## Configuration quirks
 
 - Backend secrets go in `backend/.dev.vars` for local dev, but use `wrangler secret put` for production
 - `CORS_ORIGIN` is a public wrangler `[vars]` (not a secret), set in `wrangler.toml`
 - Backend requires `SUPABASE_SERVICE_ROLE` key — never expose it to frontend
+- `DISCORD_WEBHOOK_URL` secret required for contact notifications
 - Password hash format: `saltHex:hashHex` (PBKDF2, 16-byte salt, 100k iterations SHA-256)
 - Storage bucket name: `project-images` (Supabase Storage, public read + authenticated write)
 - Deploy order: Supabase → Backend (Workers) → Frontend (Vercel)

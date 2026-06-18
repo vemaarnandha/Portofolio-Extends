@@ -17,17 +17,21 @@ export default function ImageUploadField({ value, onChange, error }: ImageUpload
   const [dragOver, setDragOver] = useState(false);
   const [validationError, setValidationError] = useState("");
 
+  const prevValueRef = useRef(value);
+  useEffect(() => {
+    if (prevValueRef.current !== value) {
+      setPreview(value ?? null);
+      prevValueRef.current = value;
+    }
+  }, [value]);
+
   useEffect(() => {
     return () => {
       if (preview && preview.startsWith("blob:")) {
         URL.revokeObjectURL(preview);
       }
     };
-  }, []);
-
-  useEffect(() => {
-    setPreview(value ?? null);
-  }, [value]);
+  }, [preview]);
 
   function validateFile(file: File): string | null {
     if (file.size > MAX_SIZE) {

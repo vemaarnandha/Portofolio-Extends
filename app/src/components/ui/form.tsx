@@ -155,6 +155,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- shadcn/ui pattern for hook exports
 export {
   useFormField,
   Form,

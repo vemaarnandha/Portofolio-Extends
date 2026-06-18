@@ -2,6 +2,21 @@
 
 Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono backend (Cloudflare Workers).
 
+## Recent Enhancements
+
+### UI/UX Modernization
+- **Modernized Interface:** Implemented a high-end "Dark Fantasy Purple" aesthetic across all pages.
+- **Bento Grid Layouts:** Redesigned Skills and Projects sections using modern Bento Grid layouts for better visual hierarchy.
+- **Immersive Animations:** Integrated `framer-motion` for smooth page transitions and micro-interactions.
+- **Visual Depth:** Added mesh gradient backgrounds and noise textures for a premium feel.
+- **Improved Responsiveness:** Refined layouts for mobile and desktop consistency.
+
+### Admin Messaging System
+- **Notification System:** Added visual indicators for unread messages on the Admin Dashboard.
+- **Message Management:** Implemented "Mark as Read" for individual messages and "Mark All as Read" for bulk actions.
+- **Real-time Counters:** Dashboard header displays the count of unread messages.
+- **Improved UI:** Admin message list uses state-based styling to differentiate read and unread messages.
+
 ## Tech Stack
 
 | Layer | Teknologi |
@@ -51,6 +66,7 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 ### Admin (Protected)
 - **/admin/login** - Form login dengan JWT
 - **/admin/dashboard** - Tabel CRUD portfolio
+- **/admin/messages** - Melihat pesan masuk dari form kontak
 - **/admin/portfolio/new** - Form tambah portfolio (dengan upload gambar drag-drop)
 - **/admin/portfolio/:id/edit** - Form edit portfolio (dengan upload gambar drag-drop)
 
@@ -69,6 +85,9 @@ Aplikasi portfolio personal full-stack dengan React frontend (Vercel) dan Hono b
 | DELETE | /api/portfolio/:id | Session | Hapus portfolio |
 | POST | /api/portfolio/upload-image | Session | Upload gambar ke Supabase Storage (multipart) |
 | DELETE | /api/portfolio/:id/image | Session | Hapus gambar dari storage & null-kan URL |
+| POST | /api/contact | Public | Kirim pesan kontak (dengan honeypot protection) |
+| GET | /api/contact | Session | List semua pesan masuk |
+| DELETE | /api/contact/:id | Session | Hapus pesan masuk |
 
 Response format: `{ success: boolean, data: any, message: string }`
 
@@ -217,10 +236,11 @@ npm install -g wrangler vercel
 3. Buka file `backend/supabase-setup.sql` — **copy semua isinya**
 4. Paste ke SQL Editor
 5. Klik **Run** (atau `Ctrl+Enter`)
-6. Pastikan tidak ada error. Akan membuat 3 tabel:
+6. Pastikan tidak ada error. Akan membuat 4 tabel:
    - `portfolio` — menyimpan data portfolio
    - `admin_users` — menyimpan admin login
    - `admin_sessions` — menyimpan session login
+   - `contacts` — menyimpan pesan dari form kontak
 
 #### B4. Buat Bucket Storage
 
@@ -310,6 +330,9 @@ npx wrangler secret put SUPABASE_ANON_KEY
 
 npx wrangler secret put SUPABASE_SERVICE_ROLE
 # ➜ Paste: eyJhbGciOiJ... (service_role dari step B2)
+
+npx wrangler secret put DISCORD_WEBHOOK_URL
+# ➜ Paste: URL Webhook dari Discord Channel Anda
 ```
 
 > **Catatan:** Secrets terenkripsi dan tidak bisa dibaca setelah disimpan. Simpan di password manager.
