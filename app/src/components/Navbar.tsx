@@ -38,13 +38,13 @@ export default function Navbar() {
         style={{ width: `${scrollProgress}%` }}
       />
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled 
-          ? "py-4 px-4" 
+        scrolled
+          ? "py-4 px-4"
           : "py-6 px-4 sm:px-6 lg:px-8"
       }`}>
         <div className={`mx-auto max-w-7xl flex items-center justify-between transition-all duration-500 px-6 h-16 rounded-2xl border ${
-          scrolled 
-            ? "bg-void-950/60 backdrop-blur-xl border-arcane-900/40 shadow-[0_0_30px_rgba(0,0,0,0.5)]" 
+          scrolled
+            ? "bg-void-950/60 backdrop-blur-xl border-arcane-900/40 shadow-[0_0_30px_rgba(0,0,0,0.5)]"
             : "bg-transparent border-transparent"
         }`}>
           <Link to="/" className="flex items-center gap-2 text-xl font-heading font-bold group">
@@ -60,13 +60,13 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <Link
                 key={link.path} to={link.path}
-                className={`group relative text-xs font-body tracking-widest uppercase transition-all duration-300 hover:text-arcane-300 ${
+                className={`group relative text-xs font-body tracking-wider transition-all duration-300 hover:text-arcane-300 ${
                   location.pathname === link.path ? "text-arcane-100" : "text-arcane-300/40"
                 }`}
               >
                 {link.label}
                 <span className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-1 bg-enchant-400 rounded-full transition-all duration-500 ${
-                  location.pathname === link.path ? "w-1 opacity-100 shadow-[0_0_8px_#ea80fc]" : "w-0 opacity-0"
+                  location.pathname === link.path ? "w-full opacity-100 shadow-[0_0_8px_#ea80fc]" : "w-0 opacity-0"
                 }`} />
               </Link>
             ))}
@@ -92,7 +92,7 @@ export default function Navbar() {
               {navLinks.map((link) => (
                 <Link
                   key={link.path} to={link.path} onClick={() => setMobileOpen(false)}
-                  className={`block px-4 py-3 rounded-xl text-xs font-body tracking-widest uppercase transition-all ${
+                  className={`block px-4 py-3 rounded-xl text-sm font-body tracking-wider transition-all ${
                     location.pathname === link.path
                       ? "bg-arcane-500/10 text-arcane-400 border border-arcane-500/20"
                       : "text-arcane-300/50 hover:bg-arcane-900/20"

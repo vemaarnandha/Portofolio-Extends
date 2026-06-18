@@ -1,11 +1,12 @@
 import { Routes, Route, useLocation } from "react-router-dom";
+import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Home from "@/pages/Home";
 import Projects from "@/pages/Projects";
+import ProjectDetail from "@/pages/ProjectDetail";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
-import ProjectDetail from "@/pages/ProjectDetail";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
 import AdminMessages from "@/pages/AdminMessages";
@@ -29,6 +30,7 @@ function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <Toaster position="top-right" richColors />
       <Navbar />
       <main className="flex-1 animate-fade-from-abyss">
         <Routes>
