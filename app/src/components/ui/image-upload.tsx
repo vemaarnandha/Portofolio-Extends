@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Upload, X, AlertCircle, Loader2, ImageIcon } from "lucide-react";
+import { Upload, X, AlertCircle, ImageIcon } from "lucide-react";
 
 const MAX_SIZE = 10 * 1024 * 1024;
 const ALLOWED_MIMES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
@@ -16,7 +16,6 @@ export default function ImageUploadField({ value, onChange, error }: ImageUpload
   const [preview, setPreview] = useState<string | null>(value ?? null);
   const [dragOver, setDragOver] = useState(false);
   const [validationError, setValidationError] = useState("");
-  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -155,23 +154,17 @@ export default function ImageUploadField({ value, onChange, error }: ImageUpload
             : "border-arcane-900/50 bg-void-950 hover:border-arcane-700 hover:bg-arcane-900/20"
         )}
       >
-        {uploading ? (
-          <Loader2 className="h-8 w-8 animate-spin text-arcane-500" />
-        ) : (
-          <>
-            <div className="rounded-full bg-arcane-900/50 p-3">
-              <ImageIcon className="h-6 w-6 text-arcane-400" />
-            </div>
-            <div className="text-center">
-              <p className="text-sm font-medium text-arcane-300">
-                Klik untuk upload atau drag & drop
-              </p>
-              <p className="mt-1 text-xs text-arcane-500">
-                JPG, PNG, WebP, GIF (maks 10MB)
-              </p>
-            </div>
-          </>
-        )}
+        <div className="rounded-full bg-arcane-900/50 p-3">
+          <ImageIcon className="h-6 w-6 text-arcane-400" />
+        </div>
+        <div className="text-center">
+          <p className="text-sm font-medium text-arcane-300">
+            Klik untuk upload atau drag & drop
+          </p>
+          <p className="mt-1 text-xs text-arcane-500">
+            JPG, PNG, WebP, GIF (maks 10MB)
+          </p>
+        </div>
       </div>
       <input
         ref={inputRef}
