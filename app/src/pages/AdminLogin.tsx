@@ -49,7 +49,7 @@ export default function AdminLogin() {
               <input
                 id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-md border border-arcane-900 bg-void-950 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
-                placeholder="admin@portfolio.com"
+                placeholder="Masukan alamat email."
               />
             </div>
             <div className="space-y-2">
@@ -57,7 +57,7 @@ export default function AdminLogin() {
               <input
                 id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-md border border-arcane-900 bg-void-950 px-3 py-2 text-sm text-arcane-200 placeholder:text-arcane-700 focus:outline-none focus:ring-2 focus:ring-rift-400 focus:border-arcane-500 focus:shadow-glow transition-all duration-200"
-                placeholder="••••••••"
+                placeholder="Masukan Password"
               />
             </div>
             <button
@@ -68,7 +68,6 @@ export default function AdminLogin() {
             </button>
           </form>
         </div>
-        <p className="mt-6 text-center text-xs text-arcane-700 font-body">Default: admin@portfolio.com / admin123</p>
       </div>
     </div>
   );

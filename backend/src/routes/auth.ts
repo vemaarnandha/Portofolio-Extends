@@ -46,15 +46,15 @@ auth.post("/login", async (c) => {
 
     setCookie(c, "token", token, {
       httpOnly: true,
-      sameSite: "Lax",
-      secure: false,
+      sameSite: "None",
+      secure: true,
       path: "/",
       maxAge: 15 * 60,
     });
     setCookie(c, "refresh_token", refreshToken, {
       httpOnly: true,
-      sameSite: "Lax",
-      secure: false,
+      sameSite: "None",
+      secure: true,
       path: "/",
       maxAge: 7 * 24 * 60 * 60,
     });
@@ -108,15 +108,15 @@ auth.post("/refresh", async (c) => {
 
     setCookie(c, "token", token, {
       httpOnly: true,
-      sameSite: "Lax",
-      secure: false,
+      sameSite: "None",
+      secure: true,
       path: "/",
       maxAge: 15 * 60,
     });
     setCookie(c, "refresh_token", newRefreshToken, {
       httpOnly: true,
-      sameSite: "Lax",
-      secure: false,
+      sameSite: "None",
+      secure: true,
       path: "/",
       maxAge: 7 * 24 * 60 * 60,
     });

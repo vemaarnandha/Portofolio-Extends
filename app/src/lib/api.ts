@@ -1,6 +1,6 @@
 import type { ApiResponse, Portfolio, LoginResponse, UploadResponse } from "@/types";
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+export const API_BASE_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
 
 async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
   if (!response.ok) {
