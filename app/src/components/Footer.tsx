@@ -1,28 +1,35 @@
 import { Github, Mail, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
+const footerLinks = [
+  { label: "Beranda", path: "/" },
+  { label: "Proyek", path: "/projects" },
+  { label: "Tentang", path: "/about" },
+  { label: "Kontak", path: "/contact" },
+];
+
 export default function Footer() {
   return (
     <footer className="relative border-t border-arcane-900/50 bg-void-950 py-12 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="md:col-span-2">
-            <Link to="/" className="inline-flex items-center gap-2 text-2xl font-heading font-bold mb-6 group">
+            <Link to="/admin/login" className="inline-flex items-center gap-2 text-2xl font-heading font-bold mb-6 group">
               <Sparkles className="h-6 w-6 text-arcane-500 group-hover:rotate-12 transition-transform duration-500" />
               <span className="text-gradient">ExFolio</span>
             </Link>
-            <p className="text-arcane-300/40 font-body text-sm max-w-xs leading-relaxed">
-              Membangun masa depan digital dengan sentuhan magis dan presisi teknis. Dari Blitar untuk dunia.
+            <p className="text-arcane-300/70 font-body text-sm max-w-xs leading-relaxed">
+              Membangun pengalaman digital yang modern dan performant. Dari Blitar untuk dunia.
             </p>
           </div>
           
           <div>
-            <h4 className="font-heading text-xs tracking-[0.2em] text-arcane-500 uppercase mb-6">Navigation</h4>
+            <h4 className="font-body text-xs tracking-[0.2em] text-arcane-500 uppercase mb-6">Navigasi</h4>
             <ul className="space-y-4">
-              {['Home', 'Projects', 'About', 'Contact'].map(item => (
-                <li key={item}>
-                  <Link to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} className="text-sm text-arcane-300/60 hover:text-enchant-400 transition-colors font-body">
-                    {item}
+              {footerLinks.map(item => (
+                <li key={item.path}>
+                  <Link to={item.path} className="text-sm text-arcane-300/70 hover:text-enchant-400 transition-colors font-body">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -30,7 +37,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-heading text-xs tracking-[0.2em] text-arcane-500 uppercase mb-6">Connect</h4>
+            <h4 className="font-body text-xs tracking-[0.2em] text-arcane-500 uppercase mb-6">Hubungi</h4>
             <div className="flex gap-4">
               <a href="https://github.com/vemaarnandha" target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-xl bg-arcane-900/50 flex items-center justify-center text-arcane-400 hover:bg-arcane-500 hover:text-void-950 transition-all duration-300 border border-arcane-800/50 shadow-glow-sm">
                 <Github className="h-5 w-5" />
@@ -46,13 +53,9 @@ export default function Footer() {
         </div>
         
         <div className="pt-8 border-t border-arcane-900/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[10px] font-mono tracking-widest text-arcane-300/20 uppercase">
-            &copy; {new Date().getFullYear()} Vema Arnandha. All rites reserved.
+          <p className="text-xs font-mono tracking-widest text-arcane-300/50">
+            &copy; {new Date().getFullYear()} Vema Arnandha. Hak cipta dilindungi.
           </p>
-          <div className="flex items-center gap-6">
-            <span className="h-1 w-1 rounded-full bg-arcane-800" />
-            <span className="text-[10px] font-mono tracking-[0.3em] text-arcane-500 uppercase animate-pulse">System Online</span>
-          </div>
         </div>
       </div>
       
