@@ -8,55 +8,55 @@
   :root {
     --radius: 0.75rem;
 
-    /* Light / Warm Beige theme — comfortable, good contrast */
-    --background: 38 12% 84%;
+    /* Light / Warm Honey theme — rich golden undertones, comfortable contrast */
+    --background: 38 14% 83%;
     --foreground: 38 35% 10%;
-    --card: 38 10% 86%;
+    --card: 38 12% 85%;
     --card-foreground: 38 25% 14%;
-    --popover: 38 10% 86%;
+    --popover: 38 12% 85%;
     --popover-foreground: 38 25% 14%;
-    --primary: 42 40% 45%;
+    --primary: 42 42% 44%;
     --primary-foreground: 38 30% 92%;
-    --secondary: 38 15% 76%;
+    --secondary: 38 18% 75%;
     --secondary-foreground: 38 20% 18%;
-    --muted: 38 8% 82%;
-    --muted-foreground: 38 12% 36%;
-    --accent: 38 18% 78%;
+    --muted: 38 10% 81%;
+    --muted-foreground: 38 14% 36%;
+    --accent: 38 22% 77%;
     --accent-foreground: 38 20% 16%;
     --destructive: 0 55% 48%;
     --destructive-foreground: 0 0% 96%;
-    --border: 38 12% 72%;
-    --input: 38 12% 72%;
-    --ring: 42 40% 45%;
+    --border: 38 14% 70%;
+    --input: 38 14% 70%;
+    --ring: 42 42% 44%;
 
-    /* Custom colors — Light / Warm Beige */
-    --void-950: 218 212 201;
-    --void-900: 208 201 189;
-    --void-800: 195 187 174;
-    --void-700: 178 169 155;
-    --void-600: 160 150 135;
+    /* Custom colors — Light / Warm Honey */
+    --void-950: 220 212 196;
+    --void-900: 210 200 182;
+    --void-800: 197 186 167;
+    --void-700: 180 168 148;
+    --void-600: 162 148 128;
 
-    --arcane-950: 235 230 220;
-    --arcane-900: 228 222 212;
-    --arcane-800: 215 207 192;
-    --arcane-700: 195 183 163;
-    --arcane-600: 175 157 128;
-    --arcane-500: 160 135 65;
-    --arcane-400: 128 105 60;
-    --arcane-300: 80 63 33;
-    --arcane-200: 55 44 24;
-    --arcane-100: 30 24 15;
+    --arcane-950: 238 232 218;
+    --arcane-900: 232 224 208;
+    --arcane-800: 220 210 188;
+    --arcane-700: 200 186 158;
+    --arcane-600: 178 158 122;
+    --arcane-500: 162 136 62;
+    --arcane-400: 130 106 55;
+    --arcane-300: 82 64 30;
+    --arcane-200: 56 44 22;
+    --arcane-100: 30 24 14;
 
-    --enchant-500: 195 125 52;
-    --enchant-400: 215 155 82;
+    --enchant-500: 200 128 48;
+    --enchant-400: 220 158 78;
 
-    --rift-500: 175 95 68;
-    --rift-400: 205 135 108;
+    --rift-500: 178 92 62;
+    --rift-400: 210 132 100;
 
-    /* Shadows — Light / Warm Beige */
-    --shadow-glow: 0 0 15px rgba(160, 135, 65, 0.12), 0 0 30px rgba(160, 135, 65, 0.06);
-    --shadow-arcane: 0 0 20px rgba(160, 135, 65, 0.2), 0 0 40px rgba(128, 105, 60, 0.1), 0 4px 8px rgba(0, 0, 0, 0.08);
-    --shadow-rift: 0 0 25px rgba(175, 95, 68, 0.25), 0 0 50px rgba(175, 95, 68, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* Shadows — Light / Warm Honey */
+    --shadow-glow: 0 0 18px rgba(162, 136, 62, 0.15), 0 0 35px rgba(162, 136, 62, 0.08);
+    --shadow-arcane: 0 0 22px rgba(162, 136, 62, 0.22), 0 0 45px rgba(130, 106, 55, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+    --shadow-rift: 0 0 25px rgba(178, 92, 62, 0.25), 0 0 50px rgba(178, 92, 62, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   .dark {
@@ -196,5 +196,14 @@
 
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-arcane-400 via-enchant-400 to-rift-400;
+  }
+
+  @keyframes breath {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.92); }
+  }
+
+  .animate-breath {
+    animation: breath 3s ease-in-out infinite;
   }
 }

@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { getPortfolioById } from "@/lib/api";
 import { decodeId } from "@/lib/hash";
 import type { Portfolio } from "@/types";
-import { ArrowLeft, ExternalLink, ImageIcon, FolderOpen } from "lucide-react";
+import { ArrowLeft, ImageIcon, FolderOpen, Github } from "lucide-react";
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
@@ -107,16 +107,21 @@ export default function ProjectDetail() {
             {project.namaProject}
           </h1>
 
-          <div className="glass-card p-8 rounded-2xl mb-8">
+          <div className="mb-8">
             <p className="text-arcane-300/80 font-body text-base leading-relaxed whitespace-pre-wrap">
               {project.deskripsi}
             </p>
           </div>
 
           <div className="flex gap-4">
-            <div className="inline-flex items-center gap-2 rounded-xl border border-arcane-800 bg-void-950/50 px-6 py-3 text-sm font-body text-arcane-400 opacity-50 cursor-not-allowed">
-              <ExternalLink className="h-4 w-4" /> Demo segera hadir
-            </div>
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-arcane-800 bg-void-950/50 backdrop-blur-md px-6 py-3 text-sm font-body tracking-wider text-arcane-300 hover:bg-arcane-900/30 hover:border-arcane-600 transition-all duration-300 active:scale-95"
+            >
+              <Github className="h-4 w-4" /> Lihat di GitHub
+            </a>
           </div>
         </div>
       </div>

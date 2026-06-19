@@ -73,7 +73,7 @@ export default function Contact() {
             {/* Availability Box */}
             <div className="glass-card p-8 rounded-3xl bg-arcane-500/5 border-arcane-500/20 animate-fade-from-abyss [animation-delay:300ms]">
               <div className="flex items-center gap-3 mb-4 text-eldritch-400">
-                <div className="h-2 w-2 rounded-full bg-eldritch-500 animate-ping" />
+                <div className="h-2.5 w-2.5 rounded-full bg-eldritch-500 animate-breath shadow-glow" />
                 <span className="text-xs font-mono tracking-wider uppercase">Sedang Aktif</span>
               </div>
               <p className="text-sm text-arcane-300/70 font-body leading-relaxed">

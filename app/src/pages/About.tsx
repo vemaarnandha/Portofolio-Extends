@@ -55,16 +55,16 @@ export default function About() {
 
           <div className="glass-card p-8 rounded-3xl flex flex-col items-center justify-center text-center animate-fade-from-abyss [animation-delay:100ms]">
             <div className="relative mb-6">
-              <div className="h-24 w-24 rounded-full bg-gradient-to-br from-arcane-500 to-enchant-600 p-[2px] shadow-glow">
+              <div className="h-36 w-36 rounded-full bg-gradient-to-br from-arcane-500 via-enchant-400 to-rift-400 p-[3px] shadow-arcane">
                 <div className="h-full w-full rounded-full bg-void-950 flex items-center justify-center overflow-hidden">
-                  <img src={profileImage} alt="Profile" className="h-full w-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-500" />
+                  <img src={profileImage} alt="Profile" className="h-full w-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-700" />
                 </div>
               </div>
-              <div className="absolute -bottom-2 -right-2 h-8 w-8 rounded-lg bg-void-950 border border-arcane-800 flex items-center justify-center shadow-lg">
-                <div className="h-2 w-2 rounded-full bg-eldritch-500 animate-ping" />
+              <div className="absolute -bottom-1 -right-1 h-10 w-10 rounded-xl bg-void-950 border border-arcane-700 flex items-center justify-center shadow-lg">
+                <div className="h-3 w-3 rounded-full bg-eldritch-500 animate-breath" />
               </div>
             </div>
-            <h3 className="font-heading text-lg font-bold text-arcane-100">Vema Arnandha</h3>
+            <h3 className="font-heading text-xl font-bold text-arcane-100">Vema Arnandha</h3>
             <p className="text-xs font-body text-arcane-400 mt-1">Siswa PKL · Arre Tech</p>
             <a
               href="/cv-vema-arnandha.pdf"

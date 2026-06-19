@@ -138,17 +138,20 @@ export default function Projects() {
 
               {/* Content */}
               <div className="relative z-10 p-6 sm:p-8 h-full flex flex-col justify-end translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                <div className="mb-2 flex items-center gap-3">
-                  <span className="text-xs font-mono bg-arcane-500 text-void-950 px-2 py-0.5 rounded uppercase font-bold">
-                    {project.jobdesk}
-                  </span>
+                <div className="absolute inset-0 bg-void-950/0 group-hover:bg-void-950/60 backdrop-blur-0 group-hover:backdrop-blur-sm transition-all duration-500 rounded-2xl pointer-events-none" />
+                <div className="relative">
+                  <div className="mb-2 flex items-center gap-3">
+                    <span className="text-xs font-mono bg-arcane-500 text-void-950 px-2 py-0.5 rounded uppercase font-bold">
+                      {project.jobdesk}
+                    </span>
+                  </div>
+                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-arcane-100 mb-2 flex items-center gap-2 group-hover:text-enchant-400 transition-colors">
+                    {project.namaProject} <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0" />
+                  </h3>
+                  <p className="text-sm text-arcane-200 font-body line-clamp-2 max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                    {project.deskripsi}
+                  </p>
                 </div>
-                <h3 className="font-heading text-xl sm:text-2xl font-bold text-arcane-100 mb-2 flex items-center gap-2 group-hover:text-enchant-400 transition-colors">
-                  {project.namaProject} <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0" />
-                </h3>
-                <p className="text-sm text-arcane-300/70 font-body line-clamp-2 max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                  {project.deskripsi}
-                </p>
               </div>
 
               {/* Interactive Border Overlay */}
