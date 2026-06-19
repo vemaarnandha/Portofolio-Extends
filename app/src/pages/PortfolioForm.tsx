@@ -17,6 +17,7 @@ export default function PortfolioForm() {
     photo_url: "",
     jobdesk: "",
     deskripsi: "",
+    repo_url: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -51,6 +52,7 @@ export default function PortfolioForm() {
             photo_url: data.photoUrl,
             jobdesk: data.jobdesk,
             deskripsi: data.deskripsi,
+            repo_url: data.repoUrl || "",
           });
           if (data.photoUrl) {
             setImagePreview(data.photoUrl);
@@ -116,6 +118,7 @@ export default function PortfolioForm() {
         photo_url: photoUrl,
         jobdesk: form.jobdesk,
         deskripsi: form.deskripsi,
+        repo_url: form.repo_url || undefined,
       };
 
       const response = isEdit
@@ -147,17 +150,17 @@ export default function PortfolioForm() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 relative z-10">
         <Link
           to="/admin/dashboard"
-          className="inline-flex items-center gap-2 text-[10px] font-heading tracking-[0.2em] text-arcane-500 hover:text-arcane-300 transition-colors mb-8 uppercase"
+          className="inline-flex items-center gap-2 text-sm font-body text-arcane-400 hover:text-arcane-200 transition-colors mb-8"
         >
-          <ArrowLeft className="h-3 w-3" /> Kembali ke Dashboard
+          <ArrowLeft className="h-4 w-4" /> Kembali ke Dashboard
         </Link>
 
         <div className="mb-10 animate-fade-from-abyss">
-          <div className="inline-flex items-center gap-2 rounded-full bg-arcane-500/10 px-4 py-1.5 text-[10px] font-heading tracking-[0.3em] text-arcane-400 mb-6 uppercase border border-arcane-500/20">
-            <Sparkles className="h-3 w-3" /> Management
+          <div className="inline-flex items-center gap-2 rounded-full bg-arcane-500/10 px-4 py-1.5 text-xs font-body tracking-wider text-arcane-400 mb-6 uppercase border border-arcane-500/20">
+            <Sparkles className="h-3 w-3" /> Manajemen
           </div>
           <h1 className="font-heading text-4xl font-bold tracking-tight text-arcane-100">
-            {isEdit ? "Edit Manifest" : "New Manifest"}
+            {isEdit ? "Edit Proyek" : "Proyek Baru"}
           </h1>
         </div>
 
@@ -171,16 +174,16 @@ export default function PortfolioForm() {
             )}
 
             <div className="space-y-2">
-              <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Project Name</label>
+              <label className="text-xs font-body tracking-wider text-arcane-500 uppercase ml-1">Nama Proyek</label>
               <input
                 name="nama_project" type="text" value={form.nama_project} onChange={handleChange}
                 className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all"
-                placeholder="Ex: Enchanted Portfolio"
+                placeholder="Ex: Portfolio Website"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Artifact Image</label>
+              <label className="text-xs font-body tracking-wider text-arcane-500 uppercase ml-1">Gambar Proyek</label>
               <div className="glass-card p-4 rounded-xl border-dashed">
                 <ImageUploadField
                   value={imagePreview}
@@ -190,42 +193,50 @@ export default function PortfolioForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Role</label>
+              <label className="text-xs font-body tracking-wider text-arcane-500 uppercase ml-1">Tech Stack / Role</label>
               <input
                 name="jobdesk" type="text" value={form.jobdesk} onChange={handleChange}
                 className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all"
-                placeholder="Ex: Fullstack Developer"
+                placeholder="Ex: React, TypeScript, Tailwind"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-heading tracking-widest text-arcane-500 uppercase ml-1">Description</label>
+              <label className="text-xs font-body tracking-wider text-arcane-500 uppercase ml-1">Deskripsi</label>
               <textarea
                 name="deskripsi" rows={6} value={form.deskripsi} onChange={handleChange}
                 className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all resize-none"
-                placeholder="Detail the artifact..."
+                placeholder="Jelaskan proyek ini..."
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-body tracking-wider text-arcane-500 uppercase ml-1">Link Repository GitHub (opsional)</label>
+              <input
+                name="repo_url" type="url" value={form.repo_url} onChange={handleChange}
+                className="w-full rounded-xl border border-arcane-900 bg-void-950/50 px-4 py-3 text-sm text-arcane-100 focus:outline-none focus:border-arcane-500 focus:ring-1 focus:ring-arcane-500/30 transition-all"
+                placeholder="https://github.com/username/repo"
               />
             </div>
 
             <div className="flex items-center gap-4 pt-4">
               <button
                 type="submit" disabled={loading}
-                className="inline-flex items-center justify-center gap-3 rounded-xl bg-arcane-500 px-8 py-4 text-xs font-heading font-bold tracking-[0.2em] text-void-950 hover:bg-arcane-400 hover:shadow-arcane transition-all duration-300 disabled:opacity-50 active:scale-95 uppercase"
+                className="inline-flex items-center justify-center gap-3 rounded-xl bg-arcane-500 px-8 py-4 text-sm font-body font-bold tracking-wider text-void-950 hover:bg-arcane-400 hover:shadow-arcane transition-all duration-300 disabled:opacity-50 active:scale-95"
               >
-                {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> SAVING...</> : <><Save className="h-4 w-4" /> COMMIT MANIFEST</>}
+                {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Menyimpan...</> : <><Save className="h-4 w-4" /> Simpan Proyek</>}
               </button>
               <Link
                 to="/admin/dashboard"
-                className="inline-flex items-center gap-2 rounded-xl border border-arcane-900/50 px-8 py-4 text-xs font-heading tracking-widest text-arcane-300 hover:bg-arcane-900/30 transition-all uppercase"
+                className="inline-flex items-center gap-2 rounded-xl border border-arcane-900/50 px-8 py-4 text-sm font-body tracking-wider text-arcane-300 hover:bg-arcane-900/30 transition-all"
               >
-                DISCARD
+                Batal
               </Link>
             </div>
           </form>
         </div>
       </div>
-      
-      {/* Background Orbs */}
+
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-enchant-500/5 rounded-full blur-[120px] -z-10" />
     </div>
   );

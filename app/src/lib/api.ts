@@ -60,6 +60,7 @@ export async function createPortfolio(data: {
   photo_url: string;
   jobdesk: string;
   deskripsi: string;
+  repo_url?: string;
 }): Promise<ApiResponse<Portfolio>> {
   const response = await fetch(`${API_BASE_URL}/api/portfolio`, fetchOpts("POST", data));
   return handleResponse<Portfolio>(response);
@@ -72,6 +73,7 @@ export async function updatePortfolio(
     photo_url: string;
     jobdesk: string;
     deskripsi: string;
+    repo_url?: string;
   }
 ): Promise<ApiResponse<Portfolio>> {
   const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, fetchOpts("PUT", data));
@@ -169,21 +171,42 @@ export async function getTestimonials(): Promise<ApiResponse<Testimonial[]>> {
   return handleResponse<Testimonial[]>(response);
 }
 
-export async function createTestimonial(data: {
+export async function getAdminTestimonials(): Promise<ApiResponse<Testimonial[]>> {
+  const response = await fetch(`${API_BASE_URL}/api/testimonial/admin`, {
+    credentials: "include",
+    headers: authHeaders(),
+  });
+  return handleResponse<Testimonial[]>(response);
+}
+
+export async function submitTestimonial(data: {
   name: string;
   role: string;
   content: string;
-  initials?: string;
 }): Promise<ApiResponse<Testimonial>> {
-  const response = await fetch(`${API_BASE_URL}/api/testimonial`, fetchOpts("POST", data));
+  const response = await fetch(`${API_BASE_URL}/api/testimonial`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
   return handleResponse<Testimonial>(response);
 }
 
-export async function updateTestimonial(
-  id: number,
-  data: { name: string; role: string; content: string; initials?: string }
-): Promise<ApiResponse<Testimonial>> {
-  const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}`, fetchOpts("PUT", data));
+export async function approveTestimonial(id: number): Promise<ApiResponse<Testimonial>> {
+  const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}/approve`, {
+    method: "PUT",
+    credentials: "include",
+    headers: authHeaders(),
+  });
+  return handleResponse<Testimonial>(response);
+}
+
+export async function rejectTestimonial(id: number): Promise<ApiResponse<Testimonial>> {
+  const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}/reject`, {
+    method: "PUT",
+    credentials: "include",
+    headers: authHeaders(),
+  });
   return handleResponse<Testimonial>(response);
 }
 

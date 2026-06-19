@@ -5,6 +5,7 @@ import { logout, isAuthenticated } from "@/lib/auth";
 import type { Portfolio } from "@/types";
 import { Loader2, Plus, Pencil, Trash2, AlertCircle, FolderOpen, LogOut, ExternalLink, Mail, Quote } from "lucide-react";
 import { Link } from "react-router-dom";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -105,10 +106,11 @@ export default function AdminDashboard() {
               <Plus className="h-4 w-4" /> Tambah Portfolio
             </Link>
             <button onClick={logout}
-              className="inline-flex items-center gap-2 rounded-lg border border-blood-500/30 px-4 py-2 text-sm font-heading tracking-wider text-blood-500 hover:bg-blood-500/10 transition-all duration-200"
+              className="inline-flex items-center gap-2 rounded-lg border border-blood-500/30 px-4 py-2 text-sm font-body tracking-wider text-blood-500 hover:bg-blood-500/10 transition-all duration-200"
             >
               <LogOut className="h-4 w-4" /> Keluar
             </button>
+            <ThemeToggle />
           </div>
         </div>
         {error && (

@@ -198,6 +198,73 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-arcane-400 via-enchant-400 to-rift-400;
   }
 
+  /* Light mode — golden hover effects */
+  :root:not(.dark) .hover\:bg-arcane-500:hover {
+    background-color: rgb(162, 136, 62) !important;
+  }
+  :root:not(.dark) .hover\:bg-arcane-400:hover {
+    background-color: rgb(130, 106, 55) !important;
+  }
+  :root:not(.dark) .hover\:bg-arcane-900\/30:hover {
+    background-color: rgba(232, 224, 208, 0.3) !important;
+  }
+  :root:not(.dark) .hover\:bg-arcane-900\/50:hover {
+    background-color: rgba(232, 224, 208, 0.5) !important;
+  }
+  :root:not(.dark) .hover\:text-enchant-400:hover {
+    color: rgb(220, 158, 78) !important;
+  }
+  :root:not(.dark) .hover\:text-arcane-300:hover {
+    color: rgb(82, 64, 30) !important;
+  }
+  :root:not(.dark) .hover\:text-arcane-200:hover {
+    color: rgb(56, 44, 22) !important;
+  }
+  :root:not(.dark) .hover\:border-arcane-600:hover {
+    border-color: rgb(178, 158, 122) !important;
+  }
+  :root:not(.dark) .hover\:border-arcane-700:hover {
+    border-color: rgb(200, 186, 158) !important;
+  }
+  :root:not(.dark) .group:hover .group-hover\:text-enchant-400 {
+    color: rgb(220, 158, 78) !important;
+  }
+  :root:not(.dark) .group:hover .group-hover\:border-arcane-500\/30 {
+    border-color: rgba(162, 136, 62, 0.3) !important;
+  }
+  :root:not(.dark) .group:hover .group-hover\:bg-arcane-500 {
+    background-color: rgb(162, 136, 62) !important;
+  }
+  :root:not(.dark) .group:hover .group-hover\:bg-arcane-400 {
+    background-color: rgb(130, 106, 55) !important;
+  }
+
+  /* Light mode — glass-card golden glow */
+  :root:not(.dark) .glass-card:hover {
+    border-color: rgba(162, 136, 62, 0.4) !important;
+    box-shadow: 0 0 15px rgba(162, 136, 62, 0.12), 0 0 30px rgba(162, 136, 62, 0.06) !important;
+  }
+
+  /* Light mode — scrollbar golden */
+  :root:not(.dark) ::-webkit-scrollbar-track {
+    background: #f0e8d8;
+  }
+  :root:not(.dark) ::-webkit-scrollbar-thumb {
+    background: #b49a5c;
+    border-color: #f0e8d8;
+  }
+  :root:not(.dark) ::-webkit-scrollbar-thumb:hover {
+    background: #9a824e;
+  }
+
+  /* Light mode — text gradient golden */
+  :root:not(.dark) .text-gradient {
+    background-image: linear-gradient(to right, #a28a3e, #c8a63e, #d4b44e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   @keyframes breath {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.5; transform: scale(0.92); }

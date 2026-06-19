@@ -153,6 +153,7 @@ portfolioRoutes.post("/", authMiddleware, async (c) => {
       photo_url: string;
       jobdesk: string;
       deskripsi: string;
+      repo_url?: string;
     }>();
 
     if (!body.nama_project || !body.photo_url || !body.jobdesk || !body.deskripsi) {
@@ -167,6 +168,7 @@ portfolioRoutes.post("/", authMiddleware, async (c) => {
         photo_url: body.photo_url,
         jobdesk: body.jobdesk,
         deskripsi: body.deskripsi,
+        repo_url: body.repo_url || null,
       })
       .select()
       .single();
@@ -192,6 +194,7 @@ portfolioRoutes.put("/:id", authMiddleware, async (c) => {
       photo_url: string;
       jobdesk: string;
       deskripsi: string;
+      repo_url?: string;
     }>();
 
     if (!body.nama_project || !body.photo_url || !body.jobdesk || !body.deskripsi) {
@@ -206,6 +209,7 @@ portfolioRoutes.put("/:id", authMiddleware, async (c) => {
         photo_url: body.photo_url,
         jobdesk: body.jobdesk,
         deskripsi: body.deskripsi,
+        repo_url: body.repo_url || null,
       })
       .eq("id", id)
       .select()

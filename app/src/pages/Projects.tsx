@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { getPortfolios } from "@/lib/api";
-import { encodeId } from "@/lib/hash";
 import type { Portfolio } from "@/types";
-import { ExternalLink, FolderOpen, ImageIcon, Sparkles } from "lucide-react";
+import { FolderOpen, ImageIcon, Sparkles, Github } from "lucide-react";
 import SkeletonCard from "@/components/SkeletonCard";
 
 function ImageCard({ photoUrl, alt }: { photoUrl: string; alt: string }) {
@@ -124,8 +122,7 @@ export default function Projects() {
         {/* Grid for Projects — uniform cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project, index) => (
-            <Link
-              to={`/projects/${encodeId(project.id)}`}
+            <div
               key={project.id}
               className="group relative bento-item p-0 animate-fade-from-abyss"
               style={{ animationDelay: `${index * 100}ms` }}
@@ -136,27 +133,45 @@ export default function Projects() {
                 <div className="absolute inset-0 bg-gradient-to-t from-void-950 via-void-950/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
               </div>
 
+              {/* Hover overlay — full card coverage */}
+              <div className="absolute inset-0 z-5 bg-void-950/0 group-hover:bg-void-950/60 backdrop-blur-0 group-hover:backdrop-blur-sm transition-all duration-500 pointer-events-none" />
+
               {/* Content */}
               <div className="relative z-10 p-6 sm:p-8 h-full flex flex-col justify-end translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                <div className="absolute inset-0 bg-void-950/0 group-hover:bg-void-950/60 backdrop-blur-0 group-hover:backdrop-blur-sm transition-all duration-500 rounded-2xl pointer-events-none" />
                 <div className="relative">
                   <div className="mb-2 flex items-center gap-3">
                     <span className="text-xs font-mono bg-arcane-500 text-void-950 px-2 py-0.5 rounded uppercase font-bold">
                       {project.jobdesk}
                     </span>
                   </div>
-                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-arcane-100 mb-2 flex items-center gap-2 group-hover:text-enchant-400 transition-colors">
-                    {project.namaProject} <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0" />
+                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-arcane-100 mb-2 group-hover:text-enchant-400 transition-colors">
+                    {project.namaProject}
                   </h3>
-                  <p className="text-sm text-arcane-200 font-body line-clamp-2 max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                  <p className="text-sm text-arcane-200 font-body line-clamp-2 max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-4">
                     {project.deskripsi}
                   </p>
+                  {/* GitHub Button */}
+                  {project.repoUrl ? (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-2 rounded-lg border border-arcane-700 bg-void-950/70 backdrop-blur-md px-4 py-2 text-xs font-body tracking-wider text-arcane-300 hover:bg-arcane-500 hover:text-void-950 hover:border-arcane-500 transition-all duration-300 opacity-0 group-hover:opacity-100"
+                    >
+                      <Github className="h-3.5 w-3.5" /> Lihat di GitHub
+                    </a>
+                  ) : (
+                    <span className="inline-flex items-center gap-2 rounded-lg border border-arcane-900 bg-void-950/50 px-4 py-2 text-xs font-body tracking-wider text-arcane-600 cursor-not-allowed opacity-0 group-hover:opacity-100">
+                      <Github className="h-3.5 w-3.5" /> Repository tidak tersedia
+                    </span>
+                  )}
                 </div>
               </div>
 
               {/* Interactive Border Overlay */}
               <div className="absolute inset-0 border-2 border-transparent group-hover:border-arcane-500/30 rounded-2xl transition-all duration-500 pointer-events-none" />
-            </Link>
+            </div>
           ))}
         </div>
       </div>

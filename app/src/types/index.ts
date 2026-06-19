@@ -4,6 +4,7 @@ export interface Portfolio {
   photoUrl: string;
   jobdesk: string;
   deskripsi: string;
+  repoUrl: string | null;
   createdAt: string;
 }
 
@@ -56,5 +57,6 @@ export interface Testimonial {
   role: string;
   content: string;
   initials: string;
+  isApproved: boolean;
   createdAt: string;
 }

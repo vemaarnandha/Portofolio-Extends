@@ -77,51 +77,52 @@ export default function ProjectDetail() {
           <ArrowLeft className="h-4 w-4" /> Kembali ke Proyek
         </Link>
 
-        {/* Image */}
-        <div className="relative rounded-2xl overflow-hidden mb-8 bg-arcane-900/30">
-          {project.photoUrl && !imgFailed ? (
-            <img
-              src={project.photoUrl}
-              alt={project.namaProject}
-              className="w-full h-64 sm:h-80 object-cover"
-              onError={() => setImgFailed(true)}
-            />
-          ) : (
-            <div className="w-full h-64 sm:h-80 flex items-center justify-center">
-              <ImageIcon className="h-16 w-16 text-arcane-700/30" />
-            </div>
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="animate-fade-from-abyss">
-          <div className="flex flex-wrap gap-2 mb-4">
-            {tags.map((tag) => (
-              <span key={tag} className="text-xs font-mono bg-arcane-500/10 border border-arcane-500/20 text-arcane-400 px-3 py-1 rounded-full">
-                {tag}
-              </span>
-            ))}
+        {/* Card wrapper */}
+        <div className="glass-card rounded-3xl overflow-hidden">
+          {/* Image */}
+          <div className="relative bg-arcane-900/30">
+            {project.photoUrl && !imgFailed ? (
+              <img
+                src={project.photoUrl}
+                alt={project.namaProject}
+                className="w-full h-64 sm:h-80 object-cover"
+                onError={() => setImgFailed(true)}
+              />
+            ) : (
+              <div className="w-full h-64 sm:h-80 flex items-center justify-center">
+                <ImageIcon className="h-16 w-16 text-arcane-700/30" />
+              </div>
+            )}
           </div>
 
-          <h1 className="font-heading text-3xl sm:text-4xl font-bold text-arcane-100 mb-6">
-            {project.namaProject}
-          </h1>
+          {/* Content */}
+          <div className="p-8 sm:p-10 animate-fade-from-abyss">
+            <div className="flex flex-wrap gap-2 mb-4">
+              {tags.map((tag) => (
+                <span key={tag} className="text-xs font-mono bg-arcane-500/10 border border-arcane-500/20 text-arcane-400 px-3 py-1 rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
 
-          <div className="mb-8">
-            <p className="text-arcane-300/80 font-body text-base leading-relaxed whitespace-pre-wrap">
+            <h1 className="font-heading text-3xl sm:text-4xl font-bold text-arcane-100 mb-6">
+              {project.namaProject}
+            </h1>
+
+            <p className="text-arcane-300/80 font-body text-base leading-relaxed whitespace-pre-wrap mb-8">
               {project.deskripsi}
             </p>
-          </div>
 
-          <div className="flex gap-4">
-            <a
-              href="#"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-arcane-800 bg-void-950/50 backdrop-blur-md px-6 py-3 text-sm font-body tracking-wider text-arcane-300 hover:bg-arcane-900/30 hover:border-arcane-600 transition-all duration-300 active:scale-95"
-            >
-              <Github className="h-4 w-4" /> Lihat di GitHub
-            </a>
+            <div className="flex gap-4">
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-arcane-800 bg-void-950/50 backdrop-blur-md px-6 py-3 text-sm font-body tracking-wider text-arcane-300 hover:bg-arcane-900/30 hover:border-arcane-600 transition-all duration-300 active:scale-95"
+              >
+                <Github className="h-4 w-4" /> Lihat di GitHub
+              </a>
+            </div>
           </div>
         </div>
       </div>

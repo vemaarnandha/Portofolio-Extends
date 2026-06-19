@@ -5,13 +5,14 @@ import type { Env } from "../types/env";
 
 const testimonialRoutes = new Hono<{ Bindings: Env }>();
 
-// Public: GET all testimonials
+// Public: GET approved testimonials only
 testimonialRoutes.get("/", async (c) => {
   try {
     const supabase = getSupabase(c.env);
     const { data, error } = await supabase
       .from("testimonials")
       .select("*")
+      .eq("is_approved", true)
       .order("created_at", { ascending: true });
     if (error) throw error;
     return c.json({ success: true, data: data ?? [], message: "Testimonial berhasil diambil" });
@@ -21,49 +22,86 @@ testimonialRoutes.get("/", async (c) => {
   }
 });
 
-// Admin: POST create testimonial
-testimonialRoutes.post("/", authMiddleware, async (c) => {
+// Admin: GET all testimonials (including pending)
+testimonialRoutes.get("/admin", authMiddleware, async (c) => {
   try {
-    const body = await c.req.json<{ name: string; role: string; content: string; initials?: string }>();
-    if (!body.name || !body.role || !body.content) {
-      return c.json({ success: false, data: null, message: "Nama, role, dan konten wajib diisi" }, 400);
-    }
     const supabase = getSupabase(c.env);
-    const initials = body.initials || body.name.split(" ").map((w: string) => w[0]).join("").substring(0, 2).toUpperCase();
     const { data, error } = await supabase
       .from("testimonials")
-      .insert({ name: body.name, role: body.role, content: body.content, initials })
-      .select()
-      .single();
+      .select("*")
+      .order("created_at", { ascending: false });
     if (error) throw error;
-    return c.json({ success: true, data, message: "Testimonial berhasil ditambahkan" }, 201);
+    return c.json({ success: true, data: data ?? [], message: "Testimonial berhasil diambil" });
   } catch (error) {
-    console.error("Create testimonial error:", error);
+    console.error("Get admin testimonials error:", error);
     return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
   }
 });
 
-// Admin: PUT update testimonial
-testimonialRoutes.put("/:id", authMiddleware, async (c) => {
+// Public: POST submit testimonial (needs approval)
+testimonialRoutes.post("/", async (c) => {
   try {
-    const id = Number(c.req.param("id"));
-    if (isNaN(id)) return c.json({ success: false, data: null, message: "ID tidak valid" }, 400);
-    const body = await c.req.json<{ name: string; role: string; content: string; initials?: string }>();
+    const body = await c.req.json<{ name: string; role: string; content: string }>();
     if (!body.name || !body.role || !body.content) {
       return c.json({ success: false, data: null, message: "Nama, role, dan konten wajib diisi" }, 400);
     }
     const supabase = getSupabase(c.env);
-    const initials = body.initials || body.name.split(" ").map((w: string) => w[0]).join("").substring(0, 2).toUpperCase();
+    const initials = body.name.split(" ").map((w: string) => w[0]).join("").substring(0, 2).toUpperCase();
     const { data, error } = await supabase
       .from("testimonials")
-      .update({ name: body.name, role: body.role, content: body.content, initials })
+      .insert({
+        name: body.name,
+        role: body.role,
+        content: body.content,
+        initials,
+        is_approved: false,
+      })
+      .select()
+      .single();
+    if (error) throw error;
+    return c.json({ success: true, data, message: "Testimonial berhasil dikirim. Menunggu persetujuan admin." }, 201);
+  } catch (error) {
+    console.error("Submit testimonial error:", error);
+    return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
+  }
+});
+
+// Admin: PUT approve testimonial
+testimonialRoutes.put("/:id/approve", authMiddleware, async (c) => {
+  try {
+    const id = Number(c.req.param("id"));
+    if (isNaN(id)) return c.json({ success: false, data: null, message: "ID tidak valid" }, 400);
+    const supabase = getSupabase(c.env);
+    const { data, error } = await supabase
+      .from("testimonials")
+      .update({ is_approved: true })
       .eq("id", id)
       .select()
       .single();
     if (error) throw error;
-    return c.json({ success: true, data, message: "Testimonial berhasil diperbarui" });
+    return c.json({ success: true, data, message: "Testimonial disetujui" });
   } catch (error) {
-    console.error("Update testimonial error:", error);
+    console.error("Approve testimonial error:", error);
+    return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
+  }
+});
+
+// Admin: PUT reject testimonial
+testimonialRoutes.put("/:id/reject", authMiddleware, async (c) => {
+  try {
+    const id = Number(c.req.param("id"));
+    if (isNaN(id)) return c.json({ success: false, data: null, message: "ID tidak valid" }, 400);
+    const supabase = getSupabase(c.env);
+    const { data, error } = await supabase
+      .from("testimonials")
+      .update({ is_approved: false })
+      .eq("id", id)
+      .select()
+      .single();
+    if (error) throw error;
+    return c.json({ success: true, data, message: "Testimonial ditolak" });
+  } catch (error) {
+    console.error("Reject testimonial error:", error);
     return c.json({ success: false, data: null, message: "Terjadi kesalahan server" }, 500);
   }
 });
