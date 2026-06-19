@@ -6,31 +6,31 @@ export default {
     extend: {
       colors: {
         void: {
-          950: "#0a0a0f",
-          900: "#0f0e17",
-          800: "#161425",
-          700: "#1e1a30",
-          600: "#282340",
+          950: "rgb(var(--void-950) / <alpha-value>)",
+          900: "rgb(var(--void-900) / <alpha-value>)",
+          800: "rgb(var(--void-800) / <alpha-value>)",
+          700: "rgb(var(--void-700) / <alpha-value>)",
+          600: "rgb(var(--void-600) / <alpha-value>)",
         },
         arcane: {
-          950: "#2d1b4e",
-          900: "#3d2a5c",
-          800: "#5b3a8c",
-          700: "#7c4dba",
-          600: "#9b6dd7",
-          500: "#b68ee6",
-          400: "#c9a5f0",
-          300: "#dbc4f7",
-          200: "#ece2fb",
-          100: "#f5f0fe",
+          950: "rgb(var(--arcane-950) / <alpha-value>)",
+          900: "rgb(var(--arcane-900) / <alpha-value>)",
+          800: "rgb(var(--arcane-800) / <alpha-value>)",
+          700: "rgb(var(--arcane-700) / <alpha-value>)",
+          600: "rgb(var(--arcane-600) / <alpha-value>)",
+          500: "rgb(var(--arcane-500) / <alpha-value>)",
+          400: "rgb(var(--arcane-400) / <alpha-value>)",
+          300: "rgb(var(--arcane-300) / <alpha-value>)",
+          200: "rgb(var(--arcane-200) / <alpha-value>)",
+          100: "rgb(var(--arcane-100) / <alpha-value>)",
         },
         enchant: {
-          500: "#e040fb",
-          400: "#ea80fc",
+          500: "rgb(var(--enchant-500) / <alpha-value>)",
+          400: "rgb(var(--enchant-400) / <alpha-value>)",
         },
         rift: {
-          500: "#7c3aed",
-          400: "#a78bfa",
+          500: "rgb(var(--rift-500) / <alpha-value>)",
+          400: "rgb(var(--rift-400) / <alpha-value>)",
         },
         gold: {
           500: "#f59e0b",
@@ -86,9 +86,9 @@ export default {
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        glow: "0 0 15px rgba(182, 142, 230, 0.15), 0 0 30px rgba(182, 142, 230, 0.08)",
-        arcane: "0 0 20px rgba(182, 142, 230, 0.25), 0 0 40px rgba(124, 61, 186, 0.15), 0 4px 8px rgba(0, 0, 0, 0.4)",
-        rift: "0 0 25px rgba(124, 58, 237, 0.3), 0 0 50px rgba(124, 58, 237, 0.15), 0 4px 12px rgba(0, 0, 0, 0.5)",
+        glow: "var(--shadow-glow)",
+        arcane: "var(--shadow-arcane)",
+        rift: "var(--shadow-rift)",
       },
       keyframes: {
         "accordion-down": {

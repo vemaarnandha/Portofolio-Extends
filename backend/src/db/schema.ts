@@ -24,3 +24,13 @@ export interface AdminSession {
   created_at: string;
   last_active_at: string;
 }
+
+// Testimonials table
+// CREATE TABLE IF NOT EXISTS testimonials (
+//   id SERIAL PRIMARY KEY,
+//   name TEXT NOT NULL,
+//   role TEXT NOT NULL,
+//   content TEXT NOT NULL,
+//   initials TEXT NOT NULL DEFAULT '',
+//   created_at TIMESTAMPTZ DEFAULT NOW()
+// );

@@ -107,7 +107,7 @@ export default function Home() {
             <h3 className="font-heading text-3xl sm:text-5xl font-bold text-center text-arcane-100 tracking-tight">Kemampuan Teknis</h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-auto md:h-[600px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Frontend Card - Big */}
             <div className="md:col-span-2 md:row-span-2 bento-item group p-0 overflow-hidden relative">
               <BentoImage src={bentoSkills[0].image} alt="Frontend" />
@@ -129,20 +129,53 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Other Cards */}
-            {bentoSkills.slice(1).map((skill, i) => (
-              <div key={i} className="md:col-span-2 bento-item group p-0 overflow-hidden relative">
-                <BentoImage src={skill.image} alt={skill.title} />
-                <div className="absolute inset-0 bg-gradient-to-t from-void-950 via-void-950/40 to-transparent" />
-                <div className="absolute top-6 right-6 p-3 rounded-xl bg-arcane-500/10 text-arcane-400 group-hover:bg-arcane-500 group-hover:text-void-950 transition-all duration-500">
-                  <skill.icon className="h-6 w-6" />
-                </div>
-                <div className="relative z-10 p-6 flex flex-col justify-end h-full">
-                  <h4 className="font-heading text-xl font-bold text-arcane-100 mb-2">{skill.title}</h4>
-                  <p className="text-sm text-arcane-300/70 font-body">{skill.desc}</p>
-                </div>
+            {/* Backend Card */}
+            <div className="bento-item group p-0 overflow-hidden relative">
+              <BentoImage src={bentoSkills[1].image} alt={bentoSkills[1].title} />
+              <div className="absolute inset-0 bg-gradient-to-t from-void-950 via-void-950/40 to-transparent" />
+              <div className="absolute top-4 right-4 p-2.5 rounded-xl bg-arcane-500/10 text-arcane-400 group-hover:bg-arcane-500 group-hover:text-void-950 transition-all duration-500">
+                {(() => {
+                  const Icon = bentoSkills[1].icon;
+                  return <Icon className="h-5 w-5" />;
+                })()}
               </div>
-            ))}
+              <div className="relative z-10 p-5 flex flex-col justify-end h-full">
+                <h4 className="font-heading text-lg font-bold text-arcane-100 mb-1.5">{bentoSkills[1].title}</h4>
+                <p className="text-xs text-arcane-300/70 font-body">{bentoSkills[1].desc}</p>
+              </div>
+            </div>
+
+            {/* Database Card */}
+            <div className="bento-item group p-0 overflow-hidden relative">
+              <BentoImage src={bentoSkills[2].image} alt={bentoSkills[2].title} />
+              <div className="absolute inset-0 bg-gradient-to-t from-void-950 via-void-950/40 to-transparent" />
+              <div className="absolute top-4 right-4 p-2.5 rounded-xl bg-arcane-500/10 text-arcane-400 group-hover:bg-arcane-500 group-hover:text-void-950 transition-all duration-500">
+                {(() => {
+                  const Icon = bentoSkills[2].icon;
+                  return <Icon className="h-5 w-5" />;
+                })()}
+              </div>
+              <div className="relative z-10 p-5 flex flex-col justify-end h-full">
+                <h4 className="font-heading text-lg font-bold text-arcane-100 mb-1.5">{bentoSkills[2].title}</h4>
+                <p className="text-xs text-arcane-300/70 font-body">{bentoSkills[2].desc}</p>
+              </div>
+            </div>
+
+            {/* Optimasi Performa Card - Full Width */}
+            <div className="md:col-span-3 bento-item group p-0 overflow-hidden relative">
+              <BentoImage src={bentoSkills[3].image} alt={bentoSkills[3].title} />
+              <div className="absolute inset-0 bg-gradient-to-t from-void-950 via-void-950/40 to-transparent" />
+              <div className="absolute top-4 right-4 p-2.5 rounded-xl bg-arcane-500/10 text-arcane-400 group-hover:bg-arcane-500 group-hover:text-void-950 transition-all duration-500">
+                {(() => {
+                  const Icon = bentoSkills[3].icon;
+                  return <Icon className="h-5 w-5" />;
+                })()}
+              </div>
+              <div className="relative z-10 p-5 flex flex-col justify-end h-full">
+                <h4 className="font-heading text-lg font-bold text-arcane-100 mb-1.5">{bentoSkills[3].title}</h4>
+                <p className="text-xs text-arcane-300/70 font-body">{bentoSkills[3].desc}</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -6,6 +6,61 @@
 
 @layer base {
   :root {
+    --radius: 0.75rem;
+
+    /* Light / Warm Beige theme — comfortable, good contrast */
+    --background: 38 12% 84%;
+    --foreground: 38 35% 10%;
+    --card: 38 10% 86%;
+    --card-foreground: 38 25% 14%;
+    --popover: 38 10% 86%;
+    --popover-foreground: 38 25% 14%;
+    --primary: 42 40% 45%;
+    --primary-foreground: 38 30% 92%;
+    --secondary: 38 15% 76%;
+    --secondary-foreground: 38 20% 18%;
+    --muted: 38 8% 82%;
+    --muted-foreground: 38 12% 36%;
+    --accent: 38 18% 78%;
+    --accent-foreground: 38 20% 16%;
+    --destructive: 0 55% 48%;
+    --destructive-foreground: 0 0% 96%;
+    --border: 38 12% 72%;
+    --input: 38 12% 72%;
+    --ring: 42 40% 45%;
+
+    /* Custom colors — Light / Warm Beige */
+    --void-950: 218 212 201;
+    --void-900: 208 201 189;
+    --void-800: 195 187 174;
+    --void-700: 178 169 155;
+    --void-600: 160 150 135;
+
+    --arcane-950: 235 230 220;
+    --arcane-900: 228 222 212;
+    --arcane-800: 215 207 192;
+    --arcane-700: 195 183 163;
+    --arcane-600: 175 157 128;
+    --arcane-500: 160 135 65;
+    --arcane-400: 128 105 60;
+    --arcane-300: 80 63 33;
+    --arcane-200: 55 44 24;
+    --arcane-100: 30 24 15;
+
+    --enchant-500: 195 125 52;
+    --enchant-400: 215 155 82;
+
+    --rift-500: 175 95 68;
+    --rift-400: 205 135 108;
+
+    /* Shadows — Light / Warm Beige */
+    --shadow-glow: 0 0 15px rgba(160, 135, 65, 0.12), 0 0 30px rgba(160, 135, 65, 0.06);
+    --shadow-arcane: 0 0 20px rgba(160, 135, 65, 0.2), 0 0 40px rgba(128, 105, 60, 0.1), 0 4px 8px rgba(0, 0, 0, 0.08);
+    --shadow-rift: 0 0 25px rgba(175, 95, 68, 0.25), 0 0 50px rgba(175, 95, 68, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark {
+    /* Dark / Purple theme */
     --background: 240 20% 3.5%;
     --foreground: 265 30% 91%;
     --card: 245 22% 7%;
@@ -25,7 +80,35 @@
     --border: 265 30% 22%;
     --input: 250 22% 14%;
     --ring: 256 60% 73%;
-    --radius: 0.75rem;
+
+    /* Custom colors — Dark / Purple */
+    --void-950: 10 10 15;
+    --void-900: 15 14 23;
+    --void-800: 22 20 37;
+    --void-700: 30 26 48;
+    --void-600: 40 35 64;
+
+    --arcane-950: 45 27 78;
+    --arcane-900: 61 42 92;
+    --arcane-800: 91 58 140;
+    --arcane-700: 124 77 186;
+    --arcane-600: 155 109 215;
+    --arcane-500: 182 142 230;
+    --arcane-400: 201 165 240;
+    --arcane-300: 219 196 247;
+    --arcane-200: 236 226 251;
+    --arcane-100: 245 240 254;
+
+    --enchant-500: 224 64 251;
+    --enchant-400: 234 128 252;
+
+    --rift-500: 124 58 237;
+    --rift-400: 167 139 250;
+
+    /* Shadows — Dark / Purple */
+    --shadow-glow: 0 0 15px rgba(182, 142, 230, 0.15), 0 0 30px rgba(182, 142, 230, 0.08);
+    --shadow-arcane: 0 0 20px rgba(182, 142, 230, 0.25), 0 0 40px rgba(124, 61, 186, 0.15), 0 4px 8px rgba(0, 0, 0, 0.4);
+    --shadow-rift: 0 0 25px rgba(124, 58, 237, 0.3), 0 0 50px rgba(124, 58, 237, 0.15), 0 4px 12px rgba(0, 0, 0, 0.5);
   }
 
   * {
@@ -37,7 +120,7 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Animated Mesh Gradient Background */
+  /* Animated Mesh Gradient Background — Light */
   body::before {
     content: '';
     position: fixed;
@@ -47,11 +130,20 @@
     height: 100%;
     z-index: -2;
     background:
+      radial-gradient(circle at 0% 0%, rgba(195, 175, 130, 0.18) 0%, transparent 50%),
+      radial-gradient(circle at 100% 0%, rgba(175, 150, 110, 0.10) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(160, 135, 100, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 0% 100%, rgba(195, 125, 52, 0.06) 0%, transparent 50%);
+    animation: mesh-move 20s ease-in-out infinite alternate;
+  }
+
+  /* Animated Mesh Gradient Background — Dark */
+  .dark body::before {
+    background:
       radial-gradient(circle at 0% 0%, rgba(45, 27, 78, 0.4) 0%, transparent 50%),
       radial-gradient(circle at 100% 0%, rgba(91, 58, 140, 0.2) 0%, transparent 50%),
       radial-gradient(circle at 100% 100%, rgba(45, 27, 78, 0.3) 0%, transparent 50%),
       radial-gradient(circle at 0% 100%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
-    animation: mesh-move 20s ease-in-out infinite alternate;
   }
 
   @keyframes mesh-move {
