@@ -2,6 +2,7 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "outputDirectory": "dist",
+  "alias": "vem-ex-worth-less.vercel.app",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "https://portfolio-backend.koploges4.workers.dev/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
