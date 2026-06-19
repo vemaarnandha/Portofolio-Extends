@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { getPortfolioById } from "@/lib/api";
+import { decodeId } from "@/lib/hash";
 import type { Portfolio } from "@/types";
 import { ArrowLeft, ExternalLink, ImageIcon, FolderOpen } from "lucide-react";
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [project, setProject] = useState<Portfolio | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -14,11 +14,17 @@ export default function ProjectDetail() {
 
   useEffect(() => {
     if (!id) return;
+    const realId = decodeId(id);
+    if (realId === null) {
+      setError("ID proyek tidak valid");
+      setLoading(false);
+      return;
+    }
     let mounted = true;
     async function fetchProject() {
       try {
         setLoading(true); setError("");
-        const response = await getPortfolioById(Number(id));
+        const response = await getPortfolioById(realId!);
         if (mounted) {
           if (response.success) setProject(response.data);
           else setError(response.message || "Proyek tidak ditemukan");
@@ -37,7 +43,7 @@ export default function ProjectDetail() {
     <div className="min-h-screen py-24 relative overflow-hidden">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-arcane-900/50 rounded w-32" />
+          <div className="h-10 bg-arcane-900/50 rounded-xl w-40" />
           <div className="h-64 bg-arcane-900/50 rounded-2xl" />
           <div className="h-8 bg-arcane-900/50 rounded w-3/4" />
           <div className="h-4 bg-arcane-900/50 rounded w-full" />
@@ -51,10 +57,10 @@ export default function ProjectDetail() {
     <div className="min-h-screen py-24 flex items-center justify-center">
       <div className="text-center">
         <FolderOpen className="h-16 w-16 text-arcane-700/30 mx-auto mb-4" />
-        <p className="font-heading text-xl text-arcane-300 mb-4">{error || "Proyek tidak ditemukan"}</p>
-        <button onClick={() => navigate("/projects")} className="rounded-xl bg-arcane-500 px-6 py-2 text-sm font-heading tracking-widest text-void-950 hover:bg-arcane-400 transition-all">
-          Kembali ke Proyek
-        </button>
+        <p className="font-body text-xl text-arcane-300 mb-4">{error || "Proyek tidak ditemukan"}</p>
+        <Link to="/projects" className="inline-flex items-center gap-2 rounded-xl border border-arcane-800 bg-void-950/50 backdrop-blur-md px-6 py-3 text-sm font-body tracking-wider text-arcane-300 hover:bg-arcane-900/30 hover:border-arcane-600 transition-all duration-300 active:scale-95">
+          <ArrowLeft className="h-4 w-4" /> Kembali ke Proyek
+        </Link>
       </div>
     </div>
   );
@@ -64,12 +70,12 @@ export default function ProjectDetail() {
   return (
     <div className="min-h-screen py-24 relative overflow-hidden">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
-        <button
-          onClick={() => navigate("/projects")}
-          className="inline-flex items-center gap-2 text-sm font-body text-arcane-400 hover:text-arcane-200 transition-colors mb-8"
+        <Link
+          to="/projects"
+          className="inline-flex items-center gap-2 rounded-xl border border-arcane-800 bg-void-950/50 backdrop-blur-md px-5 py-2.5 text-sm font-body tracking-wider text-arcane-300 hover:bg-arcane-900/30 hover:border-arcane-600 transition-all duration-300 active:scale-95 mb-8"
         >
           <ArrowLeft className="h-4 w-4" /> Kembali ke Proyek
-        </button>
+        </Link>
 
         {/* Image */}
         <div className="relative rounded-2xl overflow-hidden mb-8 bg-arcane-900/30">

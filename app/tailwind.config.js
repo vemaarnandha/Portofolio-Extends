@@ -73,10 +73,9 @@ export default {
         },
       },
       fontFamily: {
-        heading: ['"Cinzel Decorative"', '"Cinzel"', "serif"],
+        heading: ['"Inter"', '"Segoe UI"', "system-ui", "sans-serif"],
         body: ['"Inter"', '"Segoe UI"', "system-ui", "sans-serif"],
         mono: ['"Fira Code"', '"JetBrains Mono"', "monospace"],
-        rune: ['"MedievalSharp"', '"UnifrakturMaguntia"', "cursive"],
       },
       borderRadius: {
         xl: "calc(var(--radius) + 4px)",

@@ -49,3 +49,12 @@ export interface ContactMessage {
   createdAt: string;
   isRead: boolean;
 }
+
+export interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  content: string;
+  initials: string;
+  createdAt: string;
+}

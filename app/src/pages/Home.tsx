@@ -73,7 +73,7 @@ export default function Home() {
           </h1>
 
           <p className="mx-auto max-w-2xl text-lg sm:text-xl text-arcane-200/70 mb-12 leading-relaxed font-body animate-fade-from-abyss [animation-delay:200ms]">
-            Halo, saya <span className="text-arcane-200 font-semibold">Vema Arnandha</span>. Seorang Fullstack Developer yang mengubah baris kode menjadi pengalaman digital yang modern dan performant.
+            Halo, saya <span className="text-arcane-200 font-semibold">Vema Arnandha</span>. Seorang Fullstack Developer yang mengubah baris kode menjadi pengalaman digital yang modern dan berperforma.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-from-abyss [animation-delay:400ms]">

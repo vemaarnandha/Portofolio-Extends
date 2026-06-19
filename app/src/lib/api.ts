@@ -1,4 +1,4 @@
-import type { ApiResponse, Portfolio, LoginResponse, UploadResponse, ContactMessage } from "@/types";
+import type { ApiResponse, Portfolio, LoginResponse, UploadResponse, ContactMessage, Testimonial } from "@/types";
 import { getStoredToken } from "@/lib/auth";
 
 export const API_BASE_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
@@ -157,6 +157,38 @@ export async function markAllMessagesAsRead(): Promise<ApiResponse<null>> {
 
 export async function deleteContactMessage(id: number): Promise<ApiResponse<null>> {
   const response = await fetch(`${API_BASE_URL}/api/contact/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: authHeaders(),
+  });
+  return handleResponse<null>(response);
+}
+
+export async function getTestimonials(): Promise<ApiResponse<Testimonial[]>> {
+  const response = await fetch(`${API_BASE_URL}/api/testimonial`);
+  return handleResponse<Testimonial[]>(response);
+}
+
+export async function createTestimonial(data: {
+  name: string;
+  role: string;
+  content: string;
+  initials?: string;
+}): Promise<ApiResponse<Testimonial>> {
+  const response = await fetch(`${API_BASE_URL}/api/testimonial`, fetchOpts("POST", data));
+  return handleResponse<Testimonial>(response);
+}
+
+export async function updateTestimonial(
+  id: number,
+  data: { name: string; role: string; content: string; initials?: string }
+): Promise<ApiResponse<Testimonial>> {
+  const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}`, fetchOpts("PUT", data));
+  return handleResponse<Testimonial>(response);
+}
+
+export async function deleteTestimonial(id: number): Promise<ApiResponse<null>> {
+  const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}`, {
     method: "DELETE",
     credentials: "include",
     headers: authHeaders(),

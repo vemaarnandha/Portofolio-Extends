@@ -1,27 +1,56 @@
+import { useEffect, useState } from "react";
+import { getTestimonials } from "@/lib/api";
+import type { Testimonial } from "@/types";
 import { Quote } from "lucide-react";
 
-const testimonials = [
+const fallbackTestimonials: Testimonial[] = [
   {
+    id: 0,
     name: "Budi Santoso",
     role: "Pemilik Toko Online",
     content: "Website yang dibuat sangat responsif dan mudah digunakan. Pelanggan saya jadi lebih mudah menemukan produk. Komunikasi selama pengerjaan juga sangat baik.",
-    initials: "BS"
+    initials: "BS",
+    createdAt: "",
   },
   {
+    id: 0,
     name: "Rina Kusuma",
     role: "Mahasiswa Universitas Brawijaya",
     content: "Membantu saya membuat website portofolio yang terlihat profesional. Hasilnya melebihi ekspektasi dan selesai tepat waktu.",
-    initials: "RK"
+    initials: "RK",
+    createdAt: "",
   },
   {
+    id: 0,
     name: "Ahmad Fauzi",
     role: "Koordinator PKL, Arre Tech",
     content: "Menunjukkan kemampuan teknis yang solid dan kemauan belajar yang tinggi. Kode yang ditulis bersih dan terstruktur dengan baik.",
-    initials: "AF"
+    initials: "AF",
+    createdAt: "",
   }
 ];
 
 export default function Testimonials() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    async function fetchTestimonials() {
+      try {
+        const response = await getTestimonials();
+        if (mounted && response.success && response.data.length > 0) {
+          setTestimonials(response.data);
+        } else if (mounted) {
+          setTestimonials(fallbackTestimonials);
+        }
+      } catch {
+        if (mounted) setTestimonials(fallbackTestimonials);
+      }
+    }
+    fetchTestimonials();
+    return () => { mounted = false; };
+  }, []);
+
   return (
     <section className="py-24 relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -31,7 +60,7 @@ export default function Testimonials() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
-            <div key={i} className="glass-card p-8 rounded-2xl animate-fade-from-abyss" style={{ animationDelay: `${i * 100}ms` }}>
+            <div key={t.id || i} className="glass-card p-8 rounded-2xl animate-fade-from-abyss" style={{ animationDelay: `${i * 100}ms` }}>
               <Quote className="h-8 w-8 text-arcane-500/30 mb-4" />
               <p className="text-arcane-300/70 font-body text-sm leading-relaxed mb-6">{t.content}</p>
               <div className="flex items-center gap-3">
@@ -39,7 +68,7 @@ export default function Testimonials() {
                   {t.initials}
                 </div>
                 <div>
-                  <p className="text-sm font-heading font-bold text-arcane-100">{t.name}</p>
+                  <p className="text-sm font-body font-bold text-arcane-100">{t.name}</p>
                   <p className="text-xs text-arcane-400 font-body">{t.role}</p>
                 </div>
               </div>

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPortfolios, deletePortfolio } from "@/lib/api";
+import { getPortfolios, deletePortfolio, getContactMessages } from "@/lib/api";
 import { logout, isAuthenticated } from "@/lib/auth";
 import type { Portfolio } from "@/types";
-import { Loader2, Plus, Pencil, Trash2, AlertCircle, FolderOpen, LogOut, ExternalLink, Mail } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, AlertCircle, FolderOpen, LogOut, ExternalLink, Mail, Quote } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function AdminDashboard() {
@@ -14,6 +14,7 @@ export default function AdminDashboard() {
   const [error, setError] = useState("");
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     let mounted = true;
@@ -40,6 +41,21 @@ export default function AdminDashboard() {
     return () => { mounted = false; };
   }, [authLoading, navigate]);
 
+  useEffect(() => {
+    if (authLoading) return;
+    let mounted = true;
+    async function fetchUnread() {
+      try {
+        const response = await getContactMessages();
+        if (mounted && response.success) {
+          setUnreadCount(response.data.filter((m) => !m.isRead).length);
+        }
+      } catch { /* ignore */ }
+    }
+    fetchUnread();
+    return () => { mounted = false; };
+  }, [authLoading]);
+
   async function handleDelete(id: number) {
     if (!confirm("Apakah Anda yakin ingin menghapus portfolio ini?")) return;
     setDeleteId(id); setDeleting(true);
@@ -64,9 +80,19 @@ export default function AdminDashboard() {
           </div>
           <div className="flex items-center gap-3">
             <Link to="/admin/messages"
-              className="inline-flex items-center gap-2 rounded-lg border border-arcane-900/50 px-4 py-2 text-sm font-heading tracking-wider text-arcane-300 hover:bg-arcane-900/50 hover:border-arcane-700 transition-all duration-200"
+              className="relative inline-flex items-center gap-2 rounded-lg border border-arcane-900/50 px-4 py-2 text-sm font-body tracking-wider text-arcane-300 hover:bg-arcane-900/50 hover:border-arcane-700 transition-all duration-200"
             >
               <Mail className="h-4 w-4" /> Pesan
+              {unreadCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-blood-500 text-[10px] font-bold text-white flex items-center justify-center">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </Link>
+            <Link to="/admin/testimonials"
+              className="inline-flex items-center gap-2 rounded-lg border border-arcane-900/50 px-4 py-2 text-sm font-body tracking-wider text-arcane-300 hover:bg-arcane-900/50 hover:border-arcane-700 transition-all duration-200"
+            >
+              <Quote className="h-4 w-4" /> Testimonial
             </Link>
             <Link to="/projects" target="_blank"
               className="inline-flex items-center gap-2 rounded-lg border border-arcane-900/50 px-4 py-2 text-sm font-heading tracking-wider text-arcane-300 hover:bg-arcane-900/50 hover:border-arcane-700 transition-all duration-200"
