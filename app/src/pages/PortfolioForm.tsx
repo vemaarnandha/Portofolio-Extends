@@ -139,14 +139,14 @@ export default function PortfolioForm() {
 
   if (authLoading || fetchLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="page-main flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-arcane-500" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-24 relative overflow-hidden">
+    <div className="page-main min-h-screen py-24 relative overflow-hidden">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 relative z-10">
         <Link
           to="/admin/dashboard"

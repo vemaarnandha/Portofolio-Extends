@@ -86,7 +86,7 @@ export default function Projects() {
   );
 
   return (
-    <div className="min-h-screen py-24 relative overflow-hidden">
+    <div className="page-main min-h-screen py-24 relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 animate-fade-from-abyss">
           <div className="inline-flex items-center gap-2 rounded-full bg-arcane-500/10 px-4 py-1.5 text-xs font-body tracking-wider text-arcane-400 mb-6 uppercase border border-arcane-500/20">

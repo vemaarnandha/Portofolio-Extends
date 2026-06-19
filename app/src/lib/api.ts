@@ -107,19 +107,6 @@ export async function uploadProjectImage(
   return response.json();
 }
 
-export async function deleteProjectImage(projectId: number): Promise<UploadResponse> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/portfolio/${projectId}/image`,
-    {
-      method: "DELETE",
-      credentials: "include",
-      headers: authHeaders(),
-    }
-  );
-
-  return response.json();
-}
-
 export async function sendContactMessage(data: {
   name: string;
   email: string;

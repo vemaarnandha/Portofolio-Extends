@@ -66,13 +66,13 @@ export default function AdminDashboard() {
   }
 
   if (authLoading || loading) return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="page-main flex min-h-screen items-center justify-center">
       <Loader2 className="h-8 w-8 animate-spin text-arcane-500" />
     </div>
   );
 
   return (
-    <div className="min-h-screen py-8 animate-fade-from-abyss">
+    <div className="page-main min-h-screen py-8 animate-fade-from-abyss">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>

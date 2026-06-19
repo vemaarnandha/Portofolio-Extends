@@ -32,15 +32,6 @@ export interface UploadResponse {
   error?: string;
 }
 
-export interface ProjectFormData {
-  nama_project: string;
-  photo_url: string;
-  jobdesk: string;
-  deskripsi: string;
-  image?: File | null;
-  imagePreview?: string;
-}
-
 export interface ContactMessage {
   id: number;
   name: string;

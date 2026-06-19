@@ -29,7 +29,7 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="page-main min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background Orbs */}
       <div className="absolute top-0 -left-20 w-[400px] h-[400px] bg-arcane-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
       <div className="absolute bottom-0 -right-20 w-[400px] h-[400px] bg-enchant-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />

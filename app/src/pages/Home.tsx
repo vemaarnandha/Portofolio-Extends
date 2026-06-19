@@ -59,7 +59,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="page-main min-h-screen">
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 text-center">

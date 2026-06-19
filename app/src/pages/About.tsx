@@ -18,7 +18,7 @@ const experiences = [
 
 export default function About() {
   return (
-    <div className="min-h-screen py-24 relative overflow-hidden">
+    <div className="page-main min-h-screen py-24 relative overflow-hidden">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-20 animate-fade-from-abyss">
