@@ -1,4 +1,4 @@
-import type { ApiResponse, Portfolio, LoginResponse, UploadResponse, ContactMessage, Testimonial } from "@/types";
+import type { ApiResponse, Portfolio, LoginResponse, UploadResponse, ContactMessage } from "@/types";
 import { getStoredToken } from "@/lib/auth";
 
 export const API_BASE_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
@@ -153,55 +153,3 @@ export async function deleteContactMessage(id: number): Promise<ApiResponse<null
   return handleResponse<null>(response);
 }
 
-export async function getTestimonials(): Promise<ApiResponse<Testimonial[]>> {
-  const response = await fetch(`${API_BASE_URL}/api/testimonial`);
-  return handleResponse<Testimonial[]>(response);
-}
-
-export async function getAdminTestimonials(): Promise<ApiResponse<Testimonial[]>> {
-  const response = await fetch(`${API_BASE_URL}/api/testimonial/admin`, {
-    credentials: "include",
-    headers: authHeaders(),
-  });
-  return handleResponse<Testimonial[]>(response);
-}
-
-export async function submitTestimonial(data: {
-  name: string;
-  role: string;
-  content: string;
-}): Promise<ApiResponse<Testimonial>> {
-  const response = await fetch(`${API_BASE_URL}/api/testimonial`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  return handleResponse<Testimonial>(response);
-}
-
-export async function approveTestimonial(id: number): Promise<ApiResponse<Testimonial>> {
-  const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}/approve`, {
-    method: "PUT",
-    credentials: "include",
-    headers: authHeaders(),
-  });
-  return handleResponse<Testimonial>(response);
-}
-
-export async function rejectTestimonial(id: number): Promise<ApiResponse<Testimonial>> {
-  const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}/reject`, {
-    method: "PUT",
-    credentials: "include",
-    headers: authHeaders(),
-  });
-  return handleResponse<Testimonial>(response);
-}
-
-export async function deleteTestimonial(id: number): Promise<ApiResponse<null>> {
-  const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}`, {
-    method: "DELETE",
-    credentials: "include",
-    headers: authHeaders(),
-  });
-  return handleResponse<null>(response);
-}

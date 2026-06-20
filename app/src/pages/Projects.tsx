@@ -81,7 +81,7 @@ export default function Projects() {
     <div className="flex min-h-[60vh] flex-col items-center justify-center text-center animate-fade-from-abyss px-4">
       <FolderOpen className="h-20 w-20 text-arcane-700/30 mb-6" />
       <h2 className="font-heading text-3xl font-bold text-arcane-100 mb-3">Belum Ada Proyek</h2>
-      <p className="text-arcane-300/70 font-body max-w-md">Portofolio ini masih kosong. Silakan tambahkan proyek melalui dashboard admin.</p>
+      <p className="text-arcane-300/70 font-body max-w-md">Portofolio ini masih kosong.</p>
     </div>
   );
 

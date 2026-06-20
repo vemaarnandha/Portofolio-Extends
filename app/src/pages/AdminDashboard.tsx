@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getPortfolios, deletePortfolio, getContactMessages } from "@/lib/api";
 import { logout, isAuthenticated } from "@/lib/auth";
 import type { Portfolio } from "@/types";
-import { Loader2, Plus, Pencil, Trash2, AlertCircle, FolderOpen, LogOut, ExternalLink, Mail, Quote } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, AlertCircle, FolderOpen, LogOut, ExternalLink, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [authLoading, setAuthLoading] = useState(true);
   const [projects, setProjects] = useState<Portfolio[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +56,7 @@ export default function AdminDashboard() {
     }
     fetchUnread();
     return () => { mounted = false; };
-  }, [authLoading]);
+  }, [authLoading, location.pathname]);
 
   async function handleDelete(id: number) {
     if (!confirm("Apakah Anda yakin ingin menghapus portfolio ini?")) return;
@@ -89,11 +90,6 @@ export default function AdminDashboard() {
                   {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
               )}
-            </Link>
-            <Link to="/admin/testimonials"
-              className="inline-flex items-center gap-2 rounded-lg border border-arcane-900/50 px-4 py-2 text-sm font-body tracking-wider text-arcane-300 hover:bg-arcane-900/50 hover:border-arcane-700 transition-all duration-200"
-            >
-              <Quote className="h-4 w-4" /> Testimonial
             </Link>
             <Link to="/projects" target="_blank"
               className="inline-flex items-center gap-2 rounded-lg border border-arcane-900/50 px-4 py-2 text-sm font-heading tracking-wider text-arcane-300 hover:bg-arcane-900/50 hover:border-arcane-700 transition-all duration-200"

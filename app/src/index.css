@@ -9,54 +9,54 @@
     --radius: 0.75rem;
 
     /* Light / Warm Honey theme — rich golden undertones, comfortable contrast */
-    --background: 38 14% 83%;
+    --background: 38 25% 95%;
     --foreground: 38 35% 10%;
-    --card: 38 12% 85%;
-    --card-foreground: 38 25% 14%;
-    --popover: 38 12% 85%;
-    --popover-foreground: 38 25% 14%;
-    --primary: 42 42% 44%;
-    --primary-foreground: 38 30% 92%;
-    --secondary: 38 18% 75%;
-    --secondary-foreground: 38 20% 18%;
-    --muted: 38 10% 81%;
-    --muted-foreground: 38 14% 36%;
-    --accent: 38 22% 77%;
-    --accent-foreground: 38 20% 16%;
-    --destructive: 0 55% 48%;
-    --destructive-foreground: 0 0% 96%;
-    --border: 38 14% 70%;
-    --input: 38 14% 70%;
-    --ring: 42 42% 44%;
+    --card: 38 20% 98%;
+    --card-foreground: 38 30% 12%;
+    --popover: 38 20% 98%;
+    --popover-foreground: 38 30% 12%;
+    --primary: 38 45% 32%;
+    --primary-foreground: 38 30% 98%;
+    --secondary: 38 15% 88%;
+    --secondary-foreground: 38 35% 15%;
+    --muted: 38 12% 90%;
+    --muted-foreground: 38 20% 32%;
+    --accent: 38 20% 88%;
+    --accent-foreground: 38 35% 15%;
+    --destructive: 0 75% 42%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 38 15% 82%;
+    --input: 38 15% 82%;
+    --ring: 38 45% 32%;
 
     /* Custom colors — Light / Warm Honey */
-    --void-950: 220 212 196;
-    --void-900: 210 200 182;
-    --void-800: 197 186 167;
-    --void-700: 180 168 148;
-    --void-600: 162 148 128;
+    --void-950: 242 238 230;
+    --void-900: 232 226 215;
+    --void-800: 220 212 198;
+    --void-700: 200 190 172;
+    --void-600: 175 162 140;
 
-    --arcane-950: 238 232 218;
-    --arcane-900: 232 224 208;
-    --arcane-800: 220 210 188;
-    --arcane-700: 200 186 158;
-    --arcane-600: 178 158 122;
-    --arcane-500: 162 136 62;
-    --arcane-400: 130 106 55;
-    --arcane-300: 82 64 30;
+    --arcane-950: 248 245 238;
+    --arcane-900: 240 234 222;
+    --arcane-800: 230 220 202;
+    --arcane-700: 215 200 176;
+    --arcane-600: 192 176 146;
+    --arcane-500: 135 108 40;
+    --arcane-400: 105 82 35;
+    --arcane-300: 68 50 18;
     --arcane-200: 56 44 22;
     --arcane-100: 30 24 14;
 
-    --enchant-500: 200 128 48;
-    --enchant-400: 220 158 78;
+    --enchant-500: 180 105 32;
+    --enchant-400: 205 130 52;
 
-    --rift-500: 178 92 62;
-    --rift-400: 210 132 100;
+    --rift-500: 155 75 48;
+    --rift-400: 185 105 75;
 
     /* Shadows — Light / Warm Honey */
-    --shadow-glow: 0 0 18px rgba(162, 136, 62, 0.15), 0 0 35px rgba(162, 136, 62, 0.08);
-    --shadow-arcane: 0 0 22px rgba(162, 136, 62, 0.22), 0 0 45px rgba(130, 106, 55, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
-    --shadow-rift: 0 0 25px rgba(178, 92, 62, 0.25), 0 0 50px rgba(178, 92, 62, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-glow: 0 0 18px rgba(135, 108, 40, 0.15), 0 0 35px rgba(135, 108, 40, 0.08);
+    --shadow-arcane: 0 0 22px rgba(135, 108, 40, 0.22), 0 0 45px rgba(105, 82, 35, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+    --shadow-rift: 0 0 25px rgba(155, 75, 48, 0.25), 0 0 50px rgba(155, 75, 48, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   .dark {
@@ -224,66 +224,66 @@
 
   /* Light mode — golden hover effects */
   :root:not(.dark) .hover\:bg-arcane-500:hover {
-    background-color: rgb(162, 136, 62) !important;
+    background-color: rgb(var(--arcane-500)) !important;
   }
   :root:not(.dark) .hover\:bg-arcane-400:hover {
-    background-color: rgb(130, 106, 55) !important;
+    background-color: rgb(var(--arcane-400)) !important;
   }
   :root:not(.dark) .hover\:bg-arcane-900\/30:hover {
-    background-color: rgba(232, 224, 208, 0.3) !important;
+    background-color: rgba(var(--arcane-900), 0.3) !important;
   }
   :root:not(.dark) .hover\:bg-arcane-900\/50:hover {
-    background-color: rgba(232, 224, 208, 0.5) !important;
+    background-color: rgba(var(--arcane-900), 0.5) !important;
   }
   :root:not(.dark) .hover\:text-enchant-400:hover {
-    color: rgb(220, 158, 78) !important;
+    color: rgb(var(--enchant-400)) !important;
   }
   :root:not(.dark) .hover\:text-arcane-300:hover {
-    color: rgb(82, 64, 30) !important;
+    color: rgb(var(--arcane-300)) !important;
   }
   :root:not(.dark) .hover\:text-arcane-200:hover {
-    color: rgb(56, 44, 22) !important;
+    color: rgb(var(--arcane-200)) !important;
   }
   :root:not(.dark) .hover\:border-arcane-600:hover {
-    border-color: rgb(178, 158, 122) !important;
+    border-color: rgb(var(--arcane-600)) !important;
   }
   :root:not(.dark) .hover\:border-arcane-700:hover {
-    border-color: rgb(200, 186, 158) !important;
+    border-color: rgb(var(--arcane-700)) !important;
   }
   :root:not(.dark) .group:hover .group-hover\:text-enchant-400 {
-    color: rgb(220, 158, 78) !important;
+    color: rgb(var(--enchant-400)) !important;
   }
   :root:not(.dark) .group:hover .group-hover\:border-arcane-500\/30 {
-    border-color: rgba(162, 136, 62, 0.3) !important;
+    border-color: rgba(var(--arcane-500), 0.3) !important;
   }
   :root:not(.dark) .group:hover .group-hover\:bg-arcane-500 {
-    background-color: rgb(162, 136, 62) !important;
+    background-color: rgb(var(--arcane-500)) !important;
   }
   :root:not(.dark) .group:hover .group-hover\:bg-arcane-400 {
-    background-color: rgb(130, 106, 55) !important;
+    background-color: rgb(var(--arcane-400)) !important;
   }
 
   /* Light mode — glass-card golden glow */
   :root:not(.dark) .glass-card:hover {
-    border-color: rgba(162, 136, 62, 0.4) !important;
-    box-shadow: 0 0 15px rgba(162, 136, 62, 0.12), 0 0 30px rgba(162, 136, 62, 0.06) !important;
+    border-color: rgba(var(--arcane-500), 0.4) !important;
+    box-shadow: 0 0 15px rgba(var(--arcane-500), 0.12), 0 0 30px rgba(var(--arcane-500), 0.06) !important;
   }
 
   /* Light mode — scrollbar golden */
   :root:not(.dark) ::-webkit-scrollbar-track {
-    background: #f0e8d8;
+    background: rgb(var(--arcane-900));
   }
   :root:not(.dark) ::-webkit-scrollbar-thumb {
-    background: #b49a5c;
-    border-color: #f0e8d8;
+    background: rgb(var(--arcane-600));
+    border-color: rgb(var(--arcane-900));
   }
   :root:not(.dark) ::-webkit-scrollbar-thumb:hover {
-    background: #9a824e;
+    background: rgb(var(--arcane-500));
   }
 
   /* Light mode — text gradient golden */
   :root:not(.dark) .text-gradient {
-    background-image: linear-gradient(to right, #a28a3e, #c8a63e, #d4b44e);
+    background-image: linear-gradient(to right, rgb(var(--arcane-400)), rgb(var(--enchant-500)), rgb(var(--enchant-400)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
