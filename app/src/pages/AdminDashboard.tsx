@@ -80,7 +80,7 @@ export default function AdminDashboard() {
             <h1 className="font-heading text-2xl font-bold tracking-[0.05em] text-arcane-500">Dashboard Admin</h1>
             <p className="text-sm text-arcane-300/60 font-body">Kelola portfolio project Anda</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Link to="/admin/messages"
               className="relative inline-flex items-center gap-2 rounded-lg border border-arcane-900/50 px-4 py-2 text-sm font-body tracking-wider text-arcane-300 hover:bg-arcane-900/50 hover:border-arcane-700 transition-all duration-200"
             >

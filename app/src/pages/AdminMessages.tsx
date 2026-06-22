@@ -122,7 +122,7 @@ export default function AdminMessages() {
               <p className="text-sm text-arcane-300/60 font-body">Kotak masuk: {unreadCount} pesan belum dibaca</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <button onClick={handleMarkAllRead} className="inline-flex items-center gap-2 rounded-lg border border-arcane-700 px-4 py-2 text-sm font-heading tracking-wider text-arcane-300 hover:bg-arcane-900/50 transition-all">
               <CheckCheck className="h-4 w-4" /> Tandai Semua Dibaca
             </button>

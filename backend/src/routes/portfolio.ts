@@ -109,7 +109,7 @@ portfolioRoutes.get("/", async (c) => {
     const { data, error } = await supabase
       .from("portfolio")
       .select("*")
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return c.json({ success: true, data: toCamelCase(data ?? []), message: "Data portfolio berhasil diambil" });
