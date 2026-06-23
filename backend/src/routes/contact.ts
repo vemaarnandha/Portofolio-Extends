@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { getSupabase, toCamelCase } from "../lib/supabase";
 import { authMiddleware } from "../lib/auth-middleware";
+import { sendContactEmail } from "../lib/gmail";
 import type { Env } from "../types/env";
 
 const contactRoutes = new Hono<{ Bindings: Env }>();
@@ -68,6 +69,20 @@ contactRoutes.post("/", async (c) => {
         });
       } catch (discordError) {
         console.error("Failed to send to Discord:", discordError);
+      }
+    }
+
+    // 4. Send email via Gmail
+    if (c.env.GMAIL_CLIENT_ID && c.env.GMAIL_REFRESH_TOKEN) {
+      try {
+        await sendContactEmail(c.env, {
+          name: body.name,
+          email: body.email,
+          subject: body.subject,
+          message: body.message,
+        });
+      } catch (emailError) {
+        console.error("Failed to send email:", emailError);
       }
     }
 

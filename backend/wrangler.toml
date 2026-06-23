@@ -5,8 +5,13 @@ compatibility_date = "2024-10-22"
 # Environment Variables
 [vars]
 CORS_ORIGIN = "https://vem-ex-worth-less.vercel.app"
+GMAIL_SENDER_EMAIL = "Koploges4@gmail.com"
+GMAIL_RECIPIENT_EMAIL = "Koploges4@gmail.com"
 # Secrets (use `wrangler secret put` to set these)
 # wrangler secret put JWT_SECRET
 # wrangler secret put SUPABASE_URL
 # wrangler secret put SUPABASE_ANON_KEY
 # wrangler secret put SUPABASE_SERVICE_ROLE
+# wrangler secret put GMAIL_CLIENT_ID
+# wrangler secret put GMAIL_CLIENT_SECRET
+# wrangler secret put GMAIL_REFRESH_TOKEN

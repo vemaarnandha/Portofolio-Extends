@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getPortfolios } from "@/lib/api";
 import type { Portfolio } from "@/types";
-import { FolderOpen, ImageIcon, Sparkles, Github } from "lucide-react";
+import { FolderOpen, ImageIcon, Sparkles } from "lucide-react";
 import SkeletonCard from "@/components/SkeletonCard";
 
 function ImageCard({ photoUrl, alt }: { photoUrl: string; alt: string }) {
@@ -122,9 +123,10 @@ export default function Projects() {
         {/* Grid for Projects — uniform cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project, index) => (
-            <div
+            <Link
+              to={`/projects/${project.id}`}
               key={project.id}
-              className="group relative bento-item p-0 animate-fade-from-abyss"
+              className="group relative bento-item p-0 animate-fade-from-abyss block"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Background Image */}
@@ -144,34 +146,15 @@ export default function Projects() {
                       {project.jobdesk}
                     </span>
                   </div>
-                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-arcane-100 mb-2 group-hover:text-enchant-400 transition-colors">
+                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-arcane-100 group-hover:text-enchant-400 transition-colors">
                     {project.namaProject}
                   </h3>
-                  <p className="text-sm text-arcane-200 font-body line-clamp-2 max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-4">
-                    {project.deskripsi}
-                  </p>
-                  {/* GitHub Button */}
-                  {project.repoUrl ? (
-                    <a
-                      href={project.repoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-2 rounded-lg border border-arcane-700 bg-void-950/70 backdrop-blur-md px-4 py-2 text-xs font-body tracking-wider text-arcane-300 hover:bg-arcane-500 hover:text-void-950 hover:border-arcane-500 transition-all duration-300 opacity-0 group-hover:opacity-100"
-                    >
-                      <Github className="h-3.5 w-3.5" /> Lihat di GitHub
-                    </a>
-                  ) : (
-                    <span className="inline-flex items-center gap-2 rounded-lg border border-arcane-900 bg-void-950/50 px-4 py-2 text-xs font-body tracking-wider text-arcane-600 cursor-not-allowed opacity-0 group-hover:opacity-100">
-                      <Github className="h-3.5 w-3.5" /> Repository tidak tersedia
-                    </span>
-                  )}
                 </div>
               </div>
 
               {/* Interactive Border Overlay */}
               <div className="absolute inset-0 border-2 border-transparent group-hover:border-arcane-500/30 rounded-2xl transition-all duration-500 pointer-events-none" />
-            </div>
+            </Link>
           ))}
         </div>
       </div>
